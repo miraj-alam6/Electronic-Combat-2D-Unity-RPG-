@@ -7,6 +7,7 @@ public class Player : MovingObject {
     public int wallDamage = 1; //amount of damage that player inflicts onto the wall when chopping
     public int pointsPerFood = 10;
     public int pointsPerSoda = 20;
+    private int direction = 1; // 1 is for down, 2 is for up, 3 for right, 4 is for left
     //both of the above have values that will be the value added to player's score when consumed.
     public float restartLevelDelay = 1f;
     public Text foodText;
@@ -78,19 +79,46 @@ public class Player : MovingObject {
     {
         debuggingVariable = yDir;
         if (yDir == 1) {
+            direction = 2;
             //need to reset all other triggers to prevent triggers from staying on instead of
             //automatically turning off
             //animator.ResetTrigger("MoveDown");
             //animator.ResetTrigger("MoveUp");
+            //animator.ResetTrigger("MoveRight");
+            //animator.ResetTrigger("MoveLeft");
             animator.SetTrigger("MoveUp");
             
         }
         else if (yDir == -1){
+            direction = 1;
             //animator.ResetTrigger("MoveUp");
             //animator.ResetTrigger("MoveDown");
+            //animator.ResetTrigger("MoveRight");
+            //animator.ResetTrigger("MoveLeft");
             animator.SetTrigger("MoveDown");
 
         }
+        else if (xDir == 1)
+        {
+            direction = 3;
+            //animator.ResetTrigger("MoveUp");
+            //animator.ResetTrigger("MoveDown");
+            //animator.ResetTrigger("MoveRight");
+            //animator.ResetTrigger("MoveLeft");
+            animator.SetTrigger("MoveRight");
+
+        }
+        else if (xDir == -1)
+        {
+            direction = 4;
+            //animator.ResetTrigger("MoveUp");
+            //animator.ResetTrigger("MoveDown");
+            //animator.ResetTrigger("MoveRight");
+            //animator.ResetTrigger("MoveLeft");
+            animator.SetTrigger("MoveLeft");
+
+        }
+
         food--;
         foodText.text = "Food: " + food;
         base.AttemptMove<T>(xDir, yDir);
@@ -138,10 +166,31 @@ public class Player : MovingObject {
     //for our player this means interacting with a wall
     protected override void OnCantMove<T>(T component)
     {
+        if (direction == 1) {
+  
+            animator.ResetTrigger("MoveDown");
+            animator.SetTrigger("AttackDown");
+
+        }
+        else if (direction == 2)
+        {
+            animator.ResetTrigger("MoveUp");
+            animator.SetTrigger("AttackUp");
+        }
+        else if (direction == 3)
+        {
+            animator.ResetTrigger("MoveRight");
+            animator.SetTrigger("AttackRight");
+        }
+        else if (direction == 4)
+        {
+            animator.ResetTrigger("MoveLeft");
+            animator.SetTrigger("AttackLeft");
+        }
+        //Change this part to check the type of the component, and based on what type it is, 
+        //do a different action
         Wall hitWall = component as Wall; //reminder: as casts something
         hitWall.DamageWall(wallDamage);
-        //now trigger the animation
-        animator.SetTrigger("playerChop");
     }
 
     //this is called if we reach Exit
