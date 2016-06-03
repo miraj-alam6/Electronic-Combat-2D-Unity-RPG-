@@ -32,10 +32,11 @@ public class Player : MovingObject {
                                                       //and then it will be stored in game manager again when we change levels.
                                                       //base is how we refer to our superclass. base.Start() is calling the Start function of
                                                       //MovingObject since that is our superclass      
-        foodText.text = "Food: "+ food;
-        
-        base.Start();
 
+
+        base.Start();
+        //set text after superclass sets movepoints
+        foodText.text = "Food: " + food + " | MovePoints: " + movePoints;
     }
 
     //when the player is disabled you want to store the score into the GameManager
@@ -45,10 +46,19 @@ public class Player : MovingObject {
     // Update is called once per frame
     //we're gonna check if it's player turn or not
     void Update() {
-        if (!GameManager.instance.playersTurn)
+        if (movePoints == 0 && GameManager.instance.singlePlayerMove)
+        {
+            movePoints = maxMovePoints;
+            GameManager.instance.playersTurn = true;
+            foodText.text = "Food: " + food + " | MovePoints: " + movePoints;
+            return;
+        }
+
+        if (!GameManager.instance.singlePlayerMove || !GameManager.instance.playersTurn || GameManager.instance.enemiesMoving)
         {
             return;
         }
+       
         //now if it is player turn, then...
         //gonna use the following to store the direction we're moving
         //along an axis as either 1 or -1.
@@ -119,19 +129,29 @@ public class Player : MovingObject {
 
         }
 
-        food--;
-        foodText.text = "Food: " + food;
+        
+        
         base.AttemptMove<T>(xDir, yDir);
 
         RaycastHit2D hit;
         //play 1 of 2 sound effects if player is able to move. Breaks up monotony, having such variation
         if (Move(xDir, yDir, out hit)) {
             SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
+            movePoints--;
+            GameManager.instance.currentUnitPoints = movePoints;
+            food--;
         }
+
+        foodText.text = "Food: " + food + " | MovePoints: " + movePoints;
         //Since player has lost food from moving, we should check if game is over
         CheckIfGameOver();
-        //player turn is now over
-        GameManager.instance.playersTurn = false;
+        //player turn will be over once movePoints is 0
+        if (movePoints == 0) { 
+            GameManager.instance.playersTurn = false;
+     //       GameManager.instance.enemiesMoving = true;
+            GameManager.instance.enemyMoves = 1;
+        }
+        GameManager.instance.singlePlayerMove = false;
     }
 
     //this is how we interact with other objects like food and exit
@@ -147,14 +167,14 @@ public class Player : MovingObject {
 
             SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
             food += pointsPerFood;
-            foodText.text = "+ " + pointsPerFood + " Food: " + food;
+            foodText.text = "+ " + pointsPerFood + " Food: " + food + " | MovePoints: "+ movePoints;
             other.gameObject.SetActive(false);
         }
         if (other.tag == "Soda")
         {
             SoundManager.instance.RandomizeSfx(drinkSound1, drinkSound2);
             food += pointsPerSoda;
-            foodText.text = "+ " + pointsPerSoda + " Food: " + food;
+            foodText.text = "+ " + pointsPerSoda + " Food: " + food + " | MovePoints: " + movePoints ;
             other.gameObject.SetActive(false);
         }
 
@@ -204,7 +224,7 @@ public class Player : MovingObject {
     public void LoseFood(int loss) {
         animator.SetTrigger("playerHit");
         food -= loss;
-        foodText.text = "-" + loss + " Food: " + food;
+        foodText.text = "-" + loss + " Food: " + food + " | MovePoints: " + movePoints;
         CheckIfGameOver();
     }
     private void CheckIfGameOver() {

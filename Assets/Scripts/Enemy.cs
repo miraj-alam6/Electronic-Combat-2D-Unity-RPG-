@@ -11,6 +11,7 @@ public class Enemy : MovingObject {
 
     public AudioClip enemyAttackSound1;
     public AudioClip enemyAttackSound2;
+    //public int MoveCount = 6;
 
     // Use this for initialization
     protected override void Start () {
@@ -29,12 +30,14 @@ public class Enemy : MovingObject {
     //T is the player for this class
     protected override void AttemptMove<T>(int xDir, int yDir)
     {
-        if (skipMove == true) {
-            skipMove = false;
-            return;
-        }
+        movePoints--;
+        //Don't have skip move anymore
+        //if (skipMove == true) {
+        //    skipMove = false;
+        //    return;
+       // }
         base.AttemptMove<T>(xDir, yDir);
-        skipMove = true;
+        //skipMove = true;
     }
 
     //Game manager will call this on each enemy in our enemy list

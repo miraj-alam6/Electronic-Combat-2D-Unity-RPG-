@@ -12,17 +12,19 @@ public class GameManager : MonoBehaviour {
     //let's us make it that this is a variable for the class rather than an object. 
     public BoardManager boardScript;
     public int playerFoodPoints = 100;
-    [HideInInspector]public bool playersTurn = true; //won't see in inspector but is still a public variable
-
+    public bool singlePlayerMove = true; //won't see in inspector but is still a public variable
+    public bool playersTurn = true;
+    public int enemyMoves = 5;
     private Text levelText;
     private GameObject levelImage; //gonna activate and deactivate as need
     private bool doingSetup; //to check if we're setting up the board to prevent player from moving
 
-    private int level = 1; //starting at 3 for testing because that's where enemy appears.
+    private int level = 4; //starting at 3 for testing because that's where enemy appears.
     private List<Enemy> enemies;
-    private bool enemiesMoving;
-
+    public bool enemiesMoving = false;
+    public bool inputHelper;// I use this boolean to let player move again
     //part of Unity API, is called every time a scene is loaded
+    public int currentUnitPoints;
     private void OnLevelWasLoaded(int index)
     {
         level++;
@@ -60,18 +62,22 @@ public class GameManager : MonoBehaviour {
 
         enemies.Clear(); //API function, need to do this when starting a new level
         boardScript.SetupScene(level);
+        //Without the next line game doesn't let you move anymore and is frozen if you end the
+        //level with your last move
+        playersTurn = true;
+        singlePlayerMove = true;
     }
 
     //hides level image once level actually starts
     private void HideLevelImage() {
-        
+
         levelImage.SetActive(false);
         doingSetup = false; //player can now move
     }
 
     // Update is called once per frame
     void Update() {
-        if (playersTurn || enemiesMoving ||doingSetup) { //added doingSetup here to prevent player moving while board is being set up
+        if (singlePlayerMove || inputHelper|| enemiesMoving ||doingSetup) { //added doingSetup here to prevent player moving while board is being set up
             return;
         }
         StartCoroutine(MoveEnemies());
@@ -92,16 +98,43 @@ public class GameManager : MonoBehaviour {
     //Now a coroutine to move our enemies one at a time in sequence
     //Will be used in update
     IEnumerator MoveEnemies() {
-        enemiesMoving = true;
+        inputHelper = true;
         yield return new WaitForSeconds(turnDelay);
+
+        if (playersTurn)
+        {
+            yield return new WaitForSeconds(turnDelay);
+            singlePlayerMove = true;
+            inputHelper = false;
+            yield break;
+        }
+
         if (enemies.Count <= 0) { //this is true for first level
+            enemyMoves = 0;
             yield return new WaitForSeconds(turnDelay); //will wait even tho no enemy to wait for
+            ;
         }
+
+        
         for (int i = 0; i < enemies.Count; i++) {// move one, then wait, then repeat
-            enemies[i].MoveEnemy(); 
-            yield return new WaitForSeconds(enemies[i].moveTime);
+            while (enemies[i].movePoints > 0) { 
+                enemies[i].MoveEnemy(); 
+                yield return new WaitForSeconds(enemies[i].moveTime);
+                yield return new WaitForSeconds(turnDelay);
+            }
+            //reset movepoints so that it can move again later
+            enemies[i].movePoints = enemies[i].maxMovePoints;
         }
-        playersTurn = true;
-        enemiesMoving = false;
+        // else {
+        //       enemiesMoving = true;
+        // }
+        //do this only if enemy is done moving
+        
+        enemyMoves--;
+        if (enemyMoves <= 0)
+        {
+            singlePlayerMove = true;
+        }
+        inputHelper = false;
     }
 }

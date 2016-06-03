@@ -5,6 +5,8 @@ using System.Collections;
 public abstract class MovingObject : MonoBehaviour { //abstract because two both player and enemy will inherit
     //absract makes the class incomplete and will have to be completed by the child class
 	public float moveTime = 0.1f; //this is the time it takes for the object to move in seconds.
+    public int movePoints;
+    public int maxMovePoints;
     public LayerMask blockingLayer; //this is the layer where we check collision to see if space open
     // Use this for initialization
     private BoxCollider2D boxCollider;
@@ -12,6 +14,7 @@ public abstract class MovingObject : MonoBehaviour { //abstract because two both
     private float inverseMoveTime; //makes movement calculation more efficient
 
 	protected virtual void Start () { //protected virtual can be overridden by inherting classes
+        movePoints = maxMovePoints;
         boxCollider = GetComponent<BoxCollider2D>();
         rb2D = GetComponent<Rigidbody2D>();
         inverseMoveTime = 1f / moveTime; //we do this so we can use multiplaction instead of division later
@@ -29,6 +32,7 @@ public abstract class MovingObject : MonoBehaviour { //abstract because two both
         //disable own boxCollider so that we can cast our ray without hitting ourself
         boxCollider.enabled = false; //SUPER IMPORTANT: make sure you turn it back on before function
         //is over
+
 
         hit = Physics2D.Linecast(start,end,blockingLayer);
         //if hit.transform is null that means we didn't hit anything which means we can move into
