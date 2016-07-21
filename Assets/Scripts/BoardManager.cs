@@ -16,6 +16,7 @@ public class BoardManager : MonoBehaviour {
         }
     }
 
+    public GameCalculation gameCalculation;
     public int columns = 8;
     public int rows = 8;
     //can change these dimensions as we want to, but gonna begin with an 8 by 8 game board.
@@ -32,7 +33,7 @@ public class BoardManager : MonoBehaviour {
     private Transform boardHolder; //this is just a parent that will hold all the board objects
     //as children so that they don't fill up the inspector, because there will be A LOT of board objects
     //so it's better if they are in a wrapper so that inspector is more clean.
-    private List<Vector3> gridPositions = new List<Vector3>(); //keeps track of all positions and if an object has been spawned there.
+    public List<Vector3> gridPositions = new List<Vector3>(); //keeps track of all positions and if an object has been spawned there.
 
     void InitializeList() {
         gridPositions.Clear();
@@ -46,6 +47,10 @@ public class BoardManager : MonoBehaviour {
 
     void BoardSetup() {
         boardHolder = new GameObject("Board").transform;
+        gameCalculation.initializeGameCalculation(columns, rows, 1);
+
+        //Comment all the following out since our board is already made in the editor
+        /*
         //-1 for start and +1 for end is because we want to instantiate the outer walls as well
         for (int x = -1; x < columns + 1; x++)
         {
@@ -53,6 +58,11 @@ public class BoardManager : MonoBehaviour {
             {
                 //gonna instantiate a random floor tile
                 GameObject toInstantiate = floorTiles[Random.Range(0, floorTiles.Length)];
+                if (x > -1 && y > -1 && x < columns && y < rows) {
+                    gameCalculation.actualGrid[y, x].walkable = true;
+                    gameCalculation.actualGrid[y, x].hasEnemy = false;
+                    gameCalculation.actualGrid[y, x].hasPlayer = false;
+                }
                 //now check if we are in the border regions, and if so instantiate an outer wall
                 //note to self: wouldn't it be better to check this first?
                 if (x == -1 || x == columns || y == -1 || y == rows) {
@@ -69,10 +79,10 @@ public class BoardManager : MonoBehaviour {
                 instance.transform.SetParent(boardHolder);
             }
         }
+        */
 
-        
 
-   
+
     }
 
     //set a randomposition using the number of different possible positions in the grid which we store
@@ -89,7 +99,7 @@ public class BoardManager : MonoBehaviour {
     }
 
     //now a function to actually spawn something at a random position and make sure it's not a duplicate
-    void LayoutObjectAtRandom(GameObject[] tileArray, int minimum, int maximum)
+    void LayoutObjectAtRandom(GameObject[] tileArray, int minimum, int maximum, string type)
     {
         int objectCount = Random.Range(minimum, maximum+1);// objectCount will be for how many objects and
         //stuff we'll spawn for let's say example how many inner walls.
@@ -97,21 +107,56 @@ public class BoardManager : MonoBehaviour {
             Vector3 randomPosition = RandomPosition(); //get a usable random position by using our function
             GameObject tileChoice = tileArray[Random.Range(0, tileArray.Length)]; //use a tile
             Instantiate(tileChoice,randomPosition,Quaternion.identity); //Instantiate the object at the randomPosition
+            int x = (int)randomPosition.x;
+            int y = (int)randomPosition.y;
+            
+            if (type.Equals("wall", StringComparison.Ordinal)) {
+                gameCalculation.actualGrid[y,x].hasWall = true;
+                gameCalculation.actualGrid[y, x].walkable = false;
+            }
+            else if (type.Equals("food", StringComparison.Ordinal))
+            {
+                //handles has food later gameCalculation.actualGrid[x, y].hasWall = true;
+            }
+            else if (type.Equals("enemy", StringComparison.Ordinal))
+            {
+               // Debug.Log(x);
+               // Debug.Log(y);
+              //  gameCalculation.actualGrid[y, x].hasEnemy = true;  moved this logic to Start of Enemy
+              //  gameCalculation.actualGrid[y, x].walkable = false; 
+            }
         }
     }
 
     //notice that our following function is  the single public function in our class, because it is
     //what will be called by the GameManager or something
     public void SetupScene(int level) {
-        BoardSetup();
-        InitializeList();
-        LayoutObjectAtRandom(wallTiles,wallCount.minimum, wallCount.maximum);
-        LayoutObjectAtRandom(foodTiles, foodCount.minimum, wallCount.maximum);
+        if(level < 11)
+        {
+            TemporaryFunction();
+            return;
+        }
+        BoardSetup(); //commented this out since i make the levels using unity editor now
+        InitializeList(); //I don't think I need this anymore
+       // LayoutObjectAtRandom(wallTiles,wallCount.minimum, wallCount.maximum,"wall");
+       // LayoutObjectAtRandom(foodTiles, foodCount.minimum, foodCount.maximum,"food");
         //we're gonna make a logarithmic difficulty progression using enemyCount
         int enemyCount = (int)Mathf.Log(level, 2.0f); //means 1 enemie at level 1, 2 enemies at level 4, 3 enemies at level 8, and so on.
-        LayoutObjectAtRandom(enemyTiles, enemyCount,enemyCount); //min max are same because we already generated how many enemies, no randomness.
+        LayoutObjectAtRandom(enemyTiles, enemyCount,enemyCount,"enemy"); //min max are same because we already generated how many enemies, no randomness.
         Instantiate(exit,new Vector3(columns -1, rows -1,0f),Quaternion.identity);//exit always in same position, which is why we use -1,-1.
     }
 
+    //All the level design thingy is in the actual scene. Keep the boardsetup,
+    //but copy and paste into scene editor when you want to see it, and then just deactivate
+    //before playing it, so that it gets created.
+    public void TemporaryFunction() {
+        BoardSetup();// Still keep BoardSetup because it sets up GameCalculation
+        //change the actual other code of boardsetup so that I don't make the board again
+        //InitializeList();
 
+        //grid is in [y,x] order
+        //Instantiate(wallTiles[0], new Vector3(4,3,0), Quaternion.identity);
+        //gameCalculation.actualGrid[3, 4].hasWall = true;
+        //gameCalculation.actualGrid[3, 4].walkable = false;
+    }
 }

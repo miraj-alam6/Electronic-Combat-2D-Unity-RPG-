@@ -1,36 +1,90 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
-
-public class Enemy : MovingObject {
+using Random = UnityEngine.Random;
+public class Enemy : Unit {
+   
     public int playerDamage; //amount of damage inflicted onto the player
-
+    public int direction = 1;
     private Animator animator;
     private Transform target; //stores player's position that will tell enemy where to move
     private bool skipMove; //use this to make enemy move every other turn
-
+    
     public AudioClip enemyAttackSound1;
     public AudioClip enemyAttackSound2;
+    public List<int> movesToDo;
+   // private bool dyingAnim = false;
     //public int MoveCount = 6;
 
     // Use this for initialization
     protected override void Start () {
         //First off, enemy must add itself to the game manager
+
+        isPlayer = false;
         GameManager.instance.AddEnemyToList(this);
         animator = GetComponent<Animator>();
         target = GameObject.FindGameObjectWithTag("Player").transform;
         base.Start();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+        GameManager.instance.gameCalculation.actualGrid[y, x].hasEnemy = true;
+        GameManager.instance.gameCalculation.actualGrid[y, x].walkable = false;
+        if (displayVitals)
+        {
+            VitalBar[] vitals = GetComponentsInChildren<VitalBar>();
+            Debug.Log(vitals[0].type);
+            Debug.Log(vitals[1].type);
+            if (vitals[0].type.Equals("HEALTH"))
+            {
+                healthBar = vitals[0];
+            }
+            else {
+                healthBar = vitals[1];
+            }
+            if (vitals[1].type.Equals("ATB"))
+            {
+                ATBBar = vitals[1];
+            }
+            else {
+                ATBBar = vitals[0];
+            }
+        }
+
+    }
+
+    // Update is called once per frame
+    void Update () {
+        base.Update();
+        if (dead)
+        {
+            GameManager.instance.currentLevel.updateLevel("killed_enemy");
+            GameManager.instance.RemoveEnemyFromList(this);
+            Destroy(this.gameObject);
+        }
 	}
 
+    //This will generate a path to the player which will be used by the enemy
+    public void Think() {
+        Debug.Log("Begin Think");
+        
+        movesToDo = new List<int>();
+
+        // int destinationX = (int) GameObject.FindGameObjectWithTag("Player").transform.position.x;
+        // int destinationY = (int)GameObject.FindGameObjectWithTag("Player").transform.position.y;
+        int playerIndex = Random.Range(0,GameManager.instance.players.Count);
+        Debug.Log(playerIndex);
+        int destinationX = GameManager.instance.players[playerIndex].x;
+        int destinationY = GameManager.instance.players[playerIndex].y;
+        Debug.Log("Current Position:" + x + "," + y);
+        Debug.Log("Player Position:" + destinationX + ","+ destinationY);
+        
+        movesToDo = GameManager.instance.gameCalculation.getShortestPath(x,y,destinationX,destinationY);
+        GameManager.instance.gameCalculation.printList(movesToDo);
+        Debug.Log("End Think");
+    }
     //T is the player for this class
     protected override void AttemptMove<T>(int xDir, int yDir)
     {
-        movePoints--;
+        
         //Don't have skip move anymore
         //if (skipMove == true) {
         //    skipMove = false;
@@ -38,31 +92,137 @@ public class Enemy : MovingObject {
        // }
         base.AttemptMove<T>(xDir, yDir);
         //skipMove = true;
+        if (ATB <= 0) {
+            movePoints = -200;
+            ATB = -200;
+        }
     }
 
     //Game manager will call this on each enemy in our enemy list
     public void MoveEnemy() {
-        int xDir = 0;
-        int yDir = 0;
-        //compare target and current position to determine which direction to move in.
-        if (Mathf.Abs(target.position.x - transform.position.x) < float.Epsilon)
-        {//means same column
-            yDir = target.position.y > transform.position.y ? 1 : -1; //if target is higher than current,
-            //than move up, else move down.
+        if (GameManager.instance.stopAll) {
+            return;
+        }
+        movePoints--;
+        LoseATB(ATBCost);
+        if (movesToDo.Count > 0) {
+         direction = movesToDo[0];
         }
         else
         {
-            xDir = target.position.x > transform.position.x ? 1 : -1; //you should be able to understand this
+            direction = Random.Range(1,5); //this range is exclusive, so make it 5
         }
-        AttemptMove<Player>(xDir, yDir);
+     //the actula top of the list will be popped in Unit.cs in Move method   
+        int xDir = 0;
+        int yDir = 0;
+        if (direction == 1)
+        {
+            xDir = 0;
+            yDir = -1;
+            if (animator)
+            {
+                animator.SetTrigger("MoveDown");
+            }
+        }
+        else if (direction == 2)
+        {
+            xDir = 0;
+            yDir = 1;
+            if (animator) { 
+                animator.SetTrigger("MoveUp");
+            }
+        }
+        else if (direction == 3)
+        {
+            xDir = 1;
+            yDir = 0;
+            if (animator)
+            {
+                animator.SetTrigger("MoveRight");
+            }
+        }
+        else if (direction == 4)
+        {
+            xDir = -1;
+            yDir = 0;
+            if (animator)
+            {
+                animator.SetTrigger("MoveLeft");
+            }
+        }
+        AttemptMove<MonoBehaviour>(xDir, yDir); //no need for abstract function anymore
     }
 
+    protected IEnumerator DieAnimation()
+    {
+        yield return new WaitForSeconds(1);
+        Debug.Log("April");
+        dead = true;
+        GameManager.instance.gameCalculation.actualGrid[y, x].hasEnemy = false;
+        GameManager.instance.gameCalculation.actualGrid[y, x].walkable = true;
+        GameManager.instance.stopAll = false;
+    }
+
+    public void LoseHP(int attack)
+    {
+     
+        HP -= (attack - defense);
+        if (HP <= 0) {
+            HP = 0;
+            ATB = 0;
+            GameManager.instance.stopAll = true;
+            StartCoroutine(DieAnimation()); 
+        }
+        if (healthBar) { 
+            healthBar.UpdateVitalBar(MaxHP, HP);
+        }
+        if (direction == 1)
+        {
+            animator.SetTrigger("HitDown");
+        }
+        else if (direction == 2)
+        {
+            animator.SetTrigger("HitUp");
+        }
+        else if (direction == 3)
+        {
+            animator.SetTrigger("HitRight");
+        }
+        else if (direction == 4)
+        {
+            animator.SetTrigger("HitLeft");
+        }
+    }
     //now the abstract function
     protected override void OnCantMove<T>(T component)
     {
-        SoundManager.instance.RandomizeSfx(enemyAttackSound1,enemyAttackSound2);
-        Player hitPlayer = component as Player;
-        animator.SetTrigger("enemyAttack");
-        hitPlayer.LoseFood(playerDamage);
+        if (component is Wall)
+        {
+            Wall hitWall = component as Wall; //reminder: as casts something
+            hitWall.DamageWall(3);
+            movePoints--;
+        }
+
+        if (component is Player) {
+            LoseATB((int)(ATBCost * 0.5)); 
+            SoundManager.instance.RandomizeSfx(enemyAttackSound1,enemyAttackSound2);
+            Player hitPlayer = component as Player;
+            if (direction == 1) { 
+                animator.SetTrigger("AttackDown");
+            }
+            else if (direction == 2)
+            {
+                animator.SetTrigger("AttackUp");
+            }
+            else if (direction == 3)
+            {
+                animator.SetTrigger("AttackRight");
+            }
+            else if (direction == 4)
+            {
+                animator.SetTrigger("AttackLeft");
+            }
+            hitPlayer.LoseHP(attack);
+        }
     }
 }

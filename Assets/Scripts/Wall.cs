@@ -9,9 +9,14 @@ public class Wall : MonoBehaviour {
     public Sprite dmgSprite; //the sprite of the wall that will be shown when the player hits it
 	// Use this for initialization
 	public int hp = 4; //this is the health of the wall
-
+    public int x, y;
     private SpriteRenderer spriteRenderer;
-
+    void Start() {
+        x = (int)GetComponent<Transform>().position.x;
+        y = (int)GetComponent<Transform>().position.y;
+        GameManager.instance.gameCalculation.actualGrid[y, x].hasWall = true;
+        GameManager.instance.gameCalculation.actualGrid[y, x].walkable = false;
+    }
     void Awake () {
         spriteRenderer = GetComponent<SpriteRenderer>();    
 	
@@ -21,7 +26,10 @@ public class Wall : MonoBehaviour {
         spriteRenderer.sprite = dmgSprite;
         hp -= loss;
         if (hp <= 0) {
+            GameManager.instance.gameCalculation.actualGrid[y, x].hasWall = false;
+            GameManager.instance.gameCalculation.actualGrid[y, x].walkable = true;
             gameObject.SetActive(false);
+ 
         }
     }	
 }

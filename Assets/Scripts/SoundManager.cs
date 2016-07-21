@@ -20,6 +20,7 @@ public class SoundManager : MonoBehaviour {
         else if (instance != this) {
             Destroy(gameObject);
         }
+        
         DontDestroyOnLoad(gameObject); //The music does not get reset as we switch levels because
         //we do dontdestroyonload. This may super helpful for future reference
 
