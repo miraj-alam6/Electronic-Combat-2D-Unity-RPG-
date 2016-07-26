@@ -21,7 +21,7 @@ public class Wall : MonoBehaviour {
         spriteRenderer = GetComponent<SpriteRenderer>();    
 	
 	}
-    public void DamageWall(int loss) {
+    public bool DamageWall(int loss) {
         SoundManager.instance.RandomizeSfx(chopSound1, chopSound2);
         spriteRenderer.sprite = dmgSprite;
         hp -= loss;
@@ -31,5 +31,6 @@ public class Wall : MonoBehaviour {
             gameObject.SetActive(false);
  
         }
+        return (hp <= 0);
     }	
 }

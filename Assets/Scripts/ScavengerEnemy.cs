@@ -54,7 +54,7 @@ public class ScavengerEnemy : Enemy {
         Debug.Log("Current Position:" + x + "," + y);
         Debug.Log("Player Position:" + destinationX + ","+ destinationY);
         
-        movesToDo = GameManager.instance.gameCalculation.getShortestPath(x,y,destinationX,destinationY);
+        movesToDo = GameManager.instance.gameCalculation.getShortestPath(x,y,destinationX,destinationY,false);
         GameManager.instance.gameCalculation.printList(movesToDo);
         Debug.Log("End Think");
     }

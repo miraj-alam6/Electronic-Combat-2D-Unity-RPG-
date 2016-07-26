@@ -1,0 +1,1023 @@
+fileFormatVersion: 2
+guid: a46422d077d721c42990c18fa4eccbc7
+timeCreated: 1469419392
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Idle_Down_1
+    21300002: Idle_Down_2
+    21300004: Idle_Up_1
+    21300006: Idle_Up_2
+    21300008: Idle_Right_1
+    21300010: Idle_Right_2
+    21300012: Idle_Left_1
+    21300014: Idle_Left_2
+    21300016: Move_Down_1
+    21300018: Move_Down_2
+    21300020: Move_Down_3
+    21300022: Move_Down_4
+    21300024: Move_Right_1
+    21300026: Move_Right_2
+    21300028: Move_Right_3
+    21300030: Move_Right_4
+    21300032: Move_Up_1
+    21300034: Move_Up_2
+    21300036: Move_Up_3
+    21300038: Move_Up_4
+    21300040: Move_Left_1
+    21300042: Move_Left_2
+    21300044: Move_Left_3
+    21300046: Move_Left_4
+    21300048: Attack_Down_1
+    21300050: Attack_Down_2
+    21300052: Attack_Up_1
+    21300054: Attack_Up_2
+    21300056: Attack_Right_1
+    21300058: Attack_Right_2
+    21300060: Attack_Left_1
+    21300062: Attack_Left_2
+    21300064: Hit_Down_1
+    21300066: Hit_Down_2
+    21300068: Hit_Up_1
+    21300070: Hit_Up_2
+    21300072: Hit_Right_1
+    21300074: Hit_Right_2
+    21300076: Hit_Left_1
+    21300078: Hit_Left_2
+    21300080: Scavengers_SpriteSheet_40
+    21300082: Scavengers_SpriteSheet_41
+    21300084: Scavengers_SpriteSheet_42
+    21300086: Scavengers_SpriteSheet_43
+    21300088: Scavengers_SpriteSheet_44
+    21300090: Scavengers_SpriteSheet_45
+    21300092: Scavengers_SpriteSheet_46
+    21300094: Scavengers_SpriteSheet_47
+    21300096: Scavengers_SpriteSheet_48
+    21300098: Scavengers_SpriteSheet_49
+    21300100: Scavengers_SpriteSheet_50
+    21300102: Scavengers_SpriteSheet_51
+    21300104: Scavengers_SpriteSheet_52
+    21300106: Scavengers_SpriteSheet_53
+    21300108: Scavengers_SpriteSheet_54
+    21300110: Scavengers_SpriteSheet_55
+    21300112: Scavengers_SpriteSheet_0
+    21300114: Scavengers_SpriteSheet_1
+    21300116: Scavengers_SpriteSheet_2
+    21300118: Scavengers_SpriteSheet_3
+    21300120: Scavengers_SpriteSheet_20
+    21300122: Scavengers_SpriteSheet_21
+    21300124: Scavengers_SpriteSheet_22
+    21300126: Scavengers_SpriteSheet_23
+    21300128: Hit_Down_1
+    21300130: Hit_Down_2
+    21300132: Hit_Up_1
+    21300134: Hit_Up_2
+    21300136: Hit_Right_1
+    21300138: Hit_Right_2
+    21300140: Hit_Left_1
+    21300142: Hit_Left_2
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -3
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: 0
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 32
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Idle_Down_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 12}
+        - {x: -11, y: 5}
+        - {x: -11, y: -13}
+        - {x: -10, y: -16}
+        - {x: 9, y: -16}
+        - {x: 11, y: -12}
+        - {x: 11, y: 4}
+        - {x: 4, y: 12}
+    - name: Idle_Down_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 12}
+        - {x: -11, y: 5}
+        - {x: -11, y: -13}
+        - {x: -10, y: -16}
+        - {x: 9, y: -16}
+        - {x: 11, y: -12}
+        - {x: 11, y: 4}
+        - {x: 4, y: 12}
+    - name: Idle_Up_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -7, y: 12}
+        - {x: -10, y: 4}
+        - {x: -10, y: -16}
+        - {x: 10, y: -16}
+        - {x: 10, y: 4}
+        - {x: 4, y: 12}
+    - name: Idle_Up_2
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -7, y: 12}
+        - {x: -10, y: 4}
+        - {x: -10, y: -16}
+        - {x: 10, y: -16}
+        - {x: 10, y: 4}
+        - {x: 4, y: 12}
+    - name: Idle_Right_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 11}
+        - {x: -9, y: 4}
+        - {x: -9, y: -16}
+        - {x: 11, y: -16}
+        - {x: 11, y: -6}
+        - {x: 4, y: 11}
+    - name: Idle_Right_2
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 11}
+        - {x: -9, y: 4}
+        - {x: -9, y: -16}
+        - {x: 11, y: -16}
+        - {x: 11, y: -6}
+        - {x: 4, y: 11}
+    - name: Idle_Left_1
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 0, y: 11}
+        - {x: -4, y: 11}
+        - {x: -11, y: -1}
+        - {x: -12, y: -3}
+        - {x: -12, y: -16}
+        - {x: 8, y: -16}
+        - {x: 8, y: 6}
+        - {x: 3, y: 10}
+    - name: Idle_Left_2
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 1, y: 11}
+        - {x: -3, y: 11}
+        - {x: -10, y: -1}
+        - {x: -11, y: -3}
+        - {x: -11, y: -16}
+        - {x: 9, y: -16}
+        - {x: 9, y: 6}
+        - {x: 4, y: 10}
+    - name: Move_Down_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 12}
+        - {x: -11, y: 5}
+        - {x: -11, y: -13}
+        - {x: -10, y: -16}
+        - {x: 9, y: -16}
+        - {x: 11, y: -12}
+        - {x: 11, y: 4}
+        - {x: 4, y: 12}
+    - name: Move_Down_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 13}
+        - {x: -9, y: 6}
+        - {x: -10, y: 3}
+        - {x: -10, y: -16}
+        - {x: 10, y: -16}
+        - {x: 10, y: 7}
+        - {x: 4, y: 13}
+    - name: Move_Down_3
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 12}
+        - {x: -11, y: 5}
+        - {x: -11, y: -13}
+        - {x: -10, y: -16}
+        - {x: 9, y: -16}
+        - {x: 11, y: -12}
+        - {x: 11, y: 4}
+        - {x: 4, y: 12}
+    - name: Move_Down_4
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -2, y: 12}
+        - {x: -10, y: 10}
+        - {x: -10, y: -16}
+        - {x: 10, y: -16}
+        - {x: 10, y: 4}
+        - {x: 7, y: 12}
+    - name: Move_Right_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -4, y: 11}
+        - {x: -8, y: 4}
+        - {x: -8, y: -16}
+        - {x: 12, y: -16}
+        - {x: 12, y: -6}
+        - {x: 5, y: 11}
+    - name: Move_Right_2
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -6, y: 11}
+        - {x: -7, y: 10}
+        - {x: -7, y: -16}
+        - {x: 13, y: -16}
+        - {x: 13, y: 9}
+        - {x: 5, y: 11}
+    - name: Move_Right_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -4, y: 11}
+        - {x: -8, y: 4}
+        - {x: -8, y: -16}
+        - {x: 12, y: -16}
+        - {x: 12, y: -6}
+        - {x: 5, y: 11}
+    - name: Move_Right_4
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -4, y: 11}
+        - {x: -8, y: 4}
+        - {x: -8, y: -14}
+        - {x: -7, y: -16}
+        - {x: 12, y: -16}
+        - {x: 12, y: -3}
+        - {x: 3, y: 11}
+    - name: Move_Up_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 11}
+        - {x: -10, y: 4}
+        - {x: -10, y: -16}
+        - {x: 10, y: -16}
+        - {x: 10, y: 8}
+        - {x: 3, y: 11}
+    - name: Move_Up_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -7, y: 11}
+        - {x: -9, y: 4}
+        - {x: -10, y: 0}
+        - {x: -10, y: -16}
+        - {x: 10, y: -16}
+        - {x: 10, y: 10}
+        - {x: 7, y: 11}
+    - name: Move_Up_3
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 11}
+        - {x: -10, y: 4}
+        - {x: -10, y: -16}
+        - {x: 10, y: -16}
+        - {x: 10, y: 8}
+        - {x: 3, y: 11}
+    - name: Move_Up_4
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 11}
+        - {x: -10, y: 4}
+        - {x: -10, y: -16}
+        - {x: 10, y: -16}
+        - {x: 10, y: 8}
+        - {x: 3, y: 11}
+    - name: Move_Left_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 0, y: 11}
+        - {x: -4, y: 11}
+        - {x: -11, y: -1}
+        - {x: -12, y: -3}
+        - {x: -12, y: -16}
+        - {x: 8, y: -16}
+        - {x: 8, y: 6}
+        - {x: 3, y: 10}
+    - name: Move_Left_2
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -13, y: -16}
+        - {x: 7, y: -16}
+        - {x: 7, y: 6}
+        - {x: 6, y: 11}
+        - {x: -6, y: 11}
+        - {x: -13, y: -2}
+    - name: Move_Left_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 0, y: 11}
+        - {x: -4, y: 11}
+        - {x: -11, y: -1}
+        - {x: -12, y: -3}
+        - {x: -12, y: -16}
+        - {x: 8, y: -16}
+        - {x: 8, y: 6}
+        - {x: 3, y: 10}
+    - name: Move_Left_4
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 11}
+        - {x: -12, y: -3}
+        - {x: -12, y: -16}
+        - {x: 8, y: -16}
+        - {x: 8, y: 9}
+        - {x: 7, y: 11}
+    - name: Attack_Down_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -6, y: 9}
+        - {x: -10, y: -2}
+        - {x: -10, y: -16}
+        - {x: 10, y: -16}
+        - {x: 10, y: 4}
+        - {x: 4, y: 9}
+    - name: Attack_Down_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -4, y: 9}
+        - {x: -8, y: 2}
+        - {x: -10, y: -4}
+        - {x: -10, y: -16}
+        - {x: 10, y: -16}
+        - {x: 10, y: 5}
+        - {x: 2, y: 9}
+    - name: Attack_Up_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -6, y: 16}
+        - {x: -10, y: 12}
+        - {x: -10, y: -6}
+        - {x: -9, y: -9}
+        - {x: 6, y: -9}
+        - {x: 10, y: -8}
+        - {x: 10, y: 11}
+        - {x: 9, y: 15}
+        - {x: 8, y: 16}
+    - name: Attack_Up_2
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -9, y: 16}
+        - {x: -9, y: -5}
+        - {x: -7, y: -9}
+        - {x: 7, y: -9}
+        - {x: 11, y: -8}
+        - {x: 11, y: 13}
+        - {x: 8, y: 16}
+    - name: Attack_Right_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 0, y: 12}
+        - {x: -2, y: 5}
+        - {x: -2, y: -15}
+        - {x: 0, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: 6}
+        - {x: 11, y: 12}
+    - name: Attack_Right_2
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 0, y: 12}
+        - {x: -2, y: 5}
+        - {x: -2, y: -15}
+        - {x: 0, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: 6}
+        - {x: 10, y: 12}
+    - name: Attack_Left_1
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -14, y: 12}
+        - {x: -16, y: 8}
+        - {x: -16, y: -16}
+        - {x: 2, y: -16}
+        - {x: 2, y: 9}
+        - {x: -3, y: 12}
+    - name: Attack_Left_2
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -11, y: 12}
+        - {x: -16, y: 4}
+        - {x: -16, y: -16}
+        - {x: 2, y: -16}
+        - {x: 2, y: 4}
+        - {x: 0, y: 12}
+    - name: Hit_Down_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -4, y: 14}
+        - {x: -11, y: 10}
+        - {x: -11, y: -9}
+        - {x: -10, y: -16}
+        - {x: 11, y: -16}
+        - {x: 11, y: 11}
+        - {x: 7, y: 14}
+    - name: Hit_Down_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -4, y: 14}
+        - {x: -11, y: 10}
+        - {x: -11, y: -9}
+        - {x: -10, y: -16}
+        - {x: 11, y: -16}
+        - {x: 11, y: 11}
+        - {x: 7, y: 14}
+    - name: Hit_Up_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -4, y: 14}
+        - {x: -11, y: 10}
+        - {x: -11, y: -9}
+        - {x: -10, y: -16}
+        - {x: 11, y: -16}
+        - {x: 11, y: 11}
+        - {x: 7, y: 14}
+    - name: Hit_Up_2
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -4, y: 14}
+        - {x: -11, y: 10}
+        - {x: -11, y: -9}
+        - {x: -10, y: -16}
+        - {x: 11, y: -16}
+        - {x: 11, y: 11}
+        - {x: 7, y: 14}
+    - name: Hit_Right_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -9, y: 8}
+        - {x: -9, y: -16}
+        - {x: 12, y: -16}
+        - {x: 12, y: -4}
+        - {x: 11, y: 0}
+        - {x: 5, y: 13}
+        - {x: -2, y: 13}
+        - {x: -4, y: 12}
+    - name: Hit_Right_2
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -10, y: 8}
+        - {x: -10, y: -16}
+        - {x: 11, y: -16}
+        - {x: 11, y: -4}
+        - {x: 10, y: 0}
+        - {x: 4, y: 13}
+        - {x: -3, y: 13}
+        - {x: -5, y: 12}
+    - name: Hit_Left_1
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -2, y: 13}
+        - {x: -4, y: 11}
+        - {x: -9, y: 5}
+        - {x: -11, y: -7}
+        - {x: -11, y: -16}
+        - {x: 10, y: -16}
+        - {x: 10, y: 7}
+        - {x: 5, y: 12}
+    - name: Hit_Left_2
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -3, y: 13}
+        - {x: -5, y: 11}
+        - {x: -10, y: 5}
+        - {x: -12, y: -7}
+        - {x: -12, y: -16}
+        - {x: 9, y: -16}
+        - {x: 9, y: 7}
+        - {x: 4, y: 12}
+    - name: Scavengers_SpriteSheet_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_41
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_42
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_43
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_44
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_45
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_46
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_47
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_49
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_50
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_51
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_52
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_53
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_54
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Scavengers_SpriteSheet_55
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

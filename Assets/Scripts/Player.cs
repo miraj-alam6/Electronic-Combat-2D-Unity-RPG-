@@ -4,11 +4,15 @@ using System;
 using UnityEngine.UI;
 //Player will inherit from Unit instead of MonoBehavior
 public class Player : Unit {
-    public string name;
+    
+    //assign character in inspector
+    public Character character; //this holds all the special moves and stat growth info
     public int wallDamage = 1; //amount of damage that player inflicts onto the wall when chopping
     public int pointsPerFood = 10;
     public int pointsPerSoda = 20;
+    public int bulletCost;
     public bool triggerCoolDown = false;
+    
     public int triggerCoolDownCounter = 0;
     private int direction = 1; // 1 is for down, 2 is for up, 3 for right, 4 is for left
                                //both of the above have values that will be the value added to player's score when consumed.
@@ -29,8 +33,8 @@ public class Player : Unit {
     public AudioClip drinkSound2;
     public AudioClip gameOverSound;
     public int debuggingVariable = 0;
-
-    public GameObject greenBullet;
+    private bool stopShooting;
+    public GameObject bullet;
    
     // Use this for initialization
     protected override void Start() {
@@ -59,7 +63,7 @@ public class Player : Unit {
         isPlayer = true;
         base.Start();
         GameManager.instance.AddPlayerToList(this);
-        GameManager.instance.gameCalculation.actualGrid[x, y].hasPlayer = true;
+        GameManager.instance.gameCalculation.actualGrid[y, x].hasPlayer = true;
         GameManager.instance.gameCalculation.actualGrid[y, x].walkable = false;
         //set text after superclass sets movepoints
         updateText();
@@ -74,7 +78,7 @@ public class Player : Unit {
     }
     // Update is called once per frame
     //we're gonna check if it's player turn or not
-    void Update() {
+    void FixedUpdate() {
         //Following is for moving around
         base.Update();
         if (dead)
@@ -91,6 +95,7 @@ public class Player : Unit {
             if (triggerCoolDownCounter >= 20) {
                 triggerCoolDownCounter = 0;
                 triggerCoolDown = false;
+                stopShooting = false;
             }
         }
         if (!isActivePlayer || !GameManager.instance.singlePlayerMove || !GameManager.instance.playersTurn
@@ -100,12 +105,13 @@ public class Player : Unit {
         }
 
         if (shooting) {
-            if (Input.GetButtonDown("Cancel")){
+            if (Input.GetButtonDown("Cancel") || stopShooting){
                 
                // Debug.Log("Let me borrow that top");
                 GameObject gridSelector = GameObject.FindGameObjectWithTag("GridSelector");
                 gridSelector.GetComponent<GridSelector>().disappear();
                 shooting = false;
+                triggerCoolDown = true;
             }
             if (Input.GetAxisRaw("Shoot") > 0) {
 
@@ -113,7 +119,10 @@ public class Player : Unit {
                 {
                     return;
                 }
+
+                
                 triggerCoolDown = true;
+                
                 //Debug.Log("Cuatemoc");
                 animator.ResetTrigger("FaceLeft");
                 animator.ResetTrigger("FaceRight");
@@ -122,14 +131,22 @@ public class Player : Unit {
                 GameObject gridSelector = GameObject.FindGameObjectWithTag("GridSelector");
                 int gridX = gridSelector.GetComponent<GridSelector>().x;
                 int gridY = gridSelector.GetComponent<GridSelector>().y;
-               
-                if (gridX == x && gridY == y)
+
+                //this stops the bullet from appearing at the moment that you press the button first time
+                if (gridX == x && gridY == y && !name.Equals("Hugo"))
                 {
                     return;
                 }
+
+                if (ATB <= 0) {
+                    stopShooting = true;
+                    return;
+                }
+                stopShooting = !(character.fireWeapon(this, gridSelector));
                 
-                GameObject bullet = Instantiate(greenBullet, new Vector3(x, y, 0), Quaternion.identity)
-                    as GameObject;
+                
+               // GameObject bullet = Instantiate(greenBullet, new Vector3(x, y, 0), Quaternion.identity)
+               //     as GameObject;
                 int xDiff = gridX - x;
                 int yDiff = gridY - y;
 
@@ -159,9 +176,9 @@ public class Player : Unit {
                     }
                 }
 
-                bullet.GetComponent<Bullet>().tempDestX = gridX;
-                bullet.GetComponent<Bullet>().tempDestY = gridY;
-                bullet.GetComponent<Bullet>().destinationSet = true;
+               // bullet.GetComponent<Bullet>().tempDestX = gridX;
+               // bullet.GetComponent<Bullet>().tempDestY = gridY;
+               // bullet.GetComponent<Bullet>().destinationSet = true;
             }
             return;
         }
@@ -174,6 +191,10 @@ public class Player : Unit {
         //looks kinda sloppy, later, make actual triggers that just make you switch to IdleUp
         if (isActivePlayer) {
             //Debug.Log(Input.GetAxisRaw("Shoot"));
+            if (Input.GetButtonDown("Special")) {
+                GameManager.instance.gameCalculation.printGrid();
+                character.StartSpecial(this);
+            }
             if (Input.GetAxisRaw("Shoot") > 0) {
                 GameObject gridSelector = GameObject.FindGameObjectWithTag("GridSelector");
                 (gridSelector.GetComponent<GridSelector>()).appear();
@@ -223,6 +244,7 @@ public class Player : Unit {
                 //you need the second of the above conditions to prevent mashed output from messing you
                 //up
             {
+                character.wasteSpecial(this);
                 movePoints = -200;
                 LoseATB(400);
                 ATB = -200;
@@ -246,6 +268,7 @@ public class Player : Unit {
                 {
                     ATB = -200;
                     movePoints = -200;
+                    character.wasteSpecial(this);
                     GameManager.instance.playersTurn = false;
                     GameManager.instance.singlePlayerMove = false;
                     //  GameManager.instance.singlePlayerMove = false;
@@ -421,6 +444,8 @@ public class Player : Unit {
     protected override void OnCantMove<T>(T component)
     {
         if (component is Player) {
+            Player p = component as Player;
+            character.CheckIfExecuteSpecial(this,p);
             return;
         }
         if (direction == 1) {
@@ -448,8 +473,12 @@ public class Player : Unit {
         //do a different action
         if (component is Wall) { 
             Wall hitWall = component as Wall; //reminder: as casts something
-            hitWall.DamageWall(wallDamage);
-            movePoints-= 2;
+            
+            if (hitWall.DamageWall(attack))
+            {
+                specialGauge.AddSpecialValue((int)(1.5* specialGainRate));
+            }
+            movePoints -= 2;
             LoseATB((int)(ATBCost * 1.8));
         }
         if (component is Enemy)
@@ -457,15 +486,25 @@ public class Player : Unit {
         {
             SoundManager.instance.RandomizeSfx(moveSound1, moveSound1); // TODO: Put new sounds here
             Enemy hitEnemy = component as Enemy;
-            hitEnemy.LoseHP(attack);
-            movePoints-= 2;
+            //Make the enemy lose HP, and if they die, you gain some special
+            if (InflictDamage) { 
+                if (hitEnemy.LoseHP(attack)) {
+                    specialGauge.AddSpecialValue(4*specialGainRate);
+                }
+            }
+            movePoints -= 2;
             LoseATB((int)(ATBCost * 1.8));
+            //make another function that you call, that has a big switch statatement with Kali and Winoa and the rest
+            character.CheckIfExecuteSpecial(this,hitEnemy);
         }
         if (component is Pot)
         {
 
+            
             Pot hitPot = component as Pot;
-            hitPot.DamagePot(attack);
+            if (hitPot.DamagePot(attack)) {
+                specialGauge.AddSpecialValue(specialGainRate);
+            }
             LoseATB((int)(ATBCost * 1.8));
             movePoints -= 2;
         }
@@ -483,30 +522,23 @@ public class Player : Unit {
   //      Application.LoadLevel("Tutorial2");
   //  }
 
-    public void gainHP(int gain)
-    {
-        HP += gain;
-        if (HP > MaxHP) {
-            HP = MaxHP;
-        }
-        if (healthBar) {
-            healthBar.UpdateVitalBar(MaxHP,HP);
-        }
-        updateText(gain, true);
-        if (name.Equals("Kali"))
-        {
-            GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliHP(MaxHP, HP);
-        }
-    }
+
 
     
 
     //this is called when enemy attacks the player //this function was moved to unit
-    public void LoseHP(int attack) {
+    public bool LoseHP(int attack) {
         
 
         if (direction == 1) {
-            animator.SetTrigger("playerHit");
+            // TODO : IMPORTANT: busywork eventually change Kali to using HitDown instead of playerHit
+            if (name.Equals("Kali"))
+            {
+                animator.SetTrigger("playerHit");
+            }
+            else {
+                animator.SetTrigger("HitDown"); 
+            }
         }
         else if (direction == 2)
         {
@@ -540,6 +572,7 @@ public class Player : Unit {
         {
             GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliHP(MaxHP, HP);
         }
+        return dead;
         //CheckIfGameOver();
     }
     private void CheckIfGameOver() {

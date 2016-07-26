@@ -48,7 +48,8 @@ public class GameCalculation : MonoBehaviour
             //this entire loop may be unneccesary 
             for (int i = 0; i < actualGrid.GetLength(0); i++)
             {
-                for (int j = 0; j < actualGrid.GetLength(1); j++)
+                for (int j = 0; j < actualGrid.GetL
+                ength(1); j++)
                 {
                     //x and y being 0 is actually acceptable
                     if (i == 0 || j == 0 || i == actualGrid.GetLength(0) - 1 || j == actualGrid.GetLength(1) - 1)
@@ -87,7 +88,7 @@ public class GameCalculation : MonoBehaviour
     }
 
     //Shortest path is found using A star algorithm
-    public List<int> getShortestPath(int srcX, int srcY, int destX, int destY)
+    public List<int> getShortestPath(int srcX, int srcY, int destX, int destY, bool unIdealSituation)
     {
         //This will hold a list of all the movements to do to get to destination
         List<int> movementsToDo = new List<int>();
@@ -102,17 +103,71 @@ public class GameCalculation : MonoBehaviour
             for (int j = 0; j < pathGrid.GetLength(1); j++)
             {
                 pathGrid[i, j] = new PathNode();
-                if (actualGrid[i, j].hasWall || actualGrid[i, j].hasPot)
+                //Debug.Log("yo");
+                if (actualGrid[i, j].hasWall || actualGrid[i, j].hasPot || actualGrid[i, j].hasPlayer)
                 {
-                    pathGrid[i, j].fullOccupied = true;
+                    if(actualGrid[i,j].x == destX && actualGrid[i,j].y == destY)
+                    {
+                        pathGrid[i, j].fullOccupied = false;
+                    }
+                    else if (unIdealSituation)
+                    {
+                        pathGrid[i, j].fullOccupied = false;
+                        Debug.Log("Hello buddy");
+                    }
+                    else {
+                        pathGrid[i, j].fullOccupied = true;
+                    }
                 }
+                
                 else if (actualGrid[i, j].hasPlayer)
                 {
-                    pathGrid[i, j].playerOccupied = true;
+                    Debug.Log("Count this up");
+                    //  Debug.Log("ho");
+                    //took out following line because it messed things up
+                    //pathGrid[i, j].playerOccupied = true;
+
+                    //don't NEED, the next line. The next line will help if
+                    //the enemy MUST target a certain character. If the enemy isn't specifically
+                    //targeting someone, it will try to get to its target, but it will not care if
+                    //it moves into a different player unit in the process of getting to the actual target.
+                    //to change this behavior, uncomment the next line
+                    //wrapped it in an if
+                    // Debug.Log("shit");
+                    //if (unIdealSituation) {//unideal is when you need to break a wall, when that happens
+                    //just ignore not using hte safe path, but when ideal situation you need to make 
+                    //sure you don't hit other player units
+                    // Debug.Log("bullshit");
+
+                    //SUPER IMPORTANT: READ NOTES FOR WHY THIS LINE OF CODE ISN'T GOOD
+                    //pathGrid[i, j].fullOccupied = true; //just doing this messes things up, because
+                    //it will mark your destination as fully occupied, thus you must exclude the
+                    //player that you are targetted towards from those that count as being full occupied.
+                    //screw this shit, it doesn't work
+                    // if (!unIdealSituation) { 
+                    /*
+                         if (pathGrid[i, j].x == destX && pathGrid[i, j].y == destY)
+                         {
+                         Debug.Log("for the other");
+                         Debug.Log(i + "," + j  +":" + destX + "," + destY);
+                             pathGrid[i,j].fullOccupied = false;
+                         }
+                         else {
+                         Debug.Log("For the other");
+                         Debug.Log(i + "," + j + ":" + destX + "," + false);
+                         pathGrid[i, j].fullOccupied = true;
+                         }
+                    // }
+                    */
+                    // if (unIdealSituation) {
+                    // pathGrid[i, j].fullOccupied = false;
+                    // }
+                    //}
                 }
                 else if (actualGrid[i, j].hasEnemy)
                 {
                     pathGrid[i, j].enemyOccupied = true;
+                    
                 }
 
                 pathGrid[i, j].x = j;

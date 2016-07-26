@@ -27,7 +27,7 @@ public class Pot : MonoBehaviour {
 	
 	}
 
-    public void DamagePot(int loss)
+    public bool DamagePot(int loss)
     {
         SoundManager.instance.RandomizeSfx(hitPotSound1, hitPotSound2);
         animator.SetTrigger("Hit");
@@ -46,5 +46,6 @@ public class Pot : MonoBehaviour {
                 Instantiate(collectible, new Vector3(x, y, 0), Quaternion.identity);
             }
         }
+        return (hp <= 0);
     }
 }

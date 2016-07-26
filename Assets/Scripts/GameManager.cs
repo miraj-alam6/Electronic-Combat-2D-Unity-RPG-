@@ -107,6 +107,24 @@ public class GameManager : MonoBehaviour {
             Debug.Log(currentLevel);
             messageUI.SetActualObjective("Defeat all\nenemies");
         }
+        else if (Application.loadedLevelName.Equals("_Scenes/Tutorial5") || Application.loadedLevelName.Equals("Tutorial5"))
+        {
+            currentLevel = new TutorialLevel5();
+            Debug.Log(currentLevel);
+            messageUI.SetActualObjective("Defeat all\nenemies");
+        }
+        else if (Application.loadedLevelName.Equals("_Scenes/Tutorial6") || Application.loadedLevelName.Equals("Tutorial6"))
+        {
+            currentLevel = new TutorialLevel6();
+            Debug.Log(currentLevel);
+            messageUI.SetActualObjective("Defeat all\nenemies");
+        }
+        else if (Application.loadedLevelName.Equals("_Scenes/Tutorial7") || Application.loadedLevelName.Equals("Tutorial7"))
+        {
+            currentLevel = new TutorialLevel7();
+            Debug.Log(currentLevel);
+            messageUI.SetActualObjective("Defeat all\nenemies");
+        }
         Debug.Log("Do we ever Init again?");
         Debug.Log(Application.loadedLevelName);
 
@@ -302,6 +320,7 @@ public class GameManager : MonoBehaviour {
                 //input glitch
               
                 currentUnit = units[i];
+                currentUnit.flashWhite(0.1f);
                // currentUnit.ATB = 100; //moved this to ApplySpeed
                 if (currentUnit.isPlayer)
                 {
@@ -373,6 +392,21 @@ public class GameManager : MonoBehaviour {
             //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
             Application.LoadLevel("_Scenes/Tutorial4");
         }
+        else if (currentLevel is TutorialLevel5)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial5");
+        }
+        else if (currentLevel is TutorialLevel6)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial6");
+        }
+        else if (currentLevel is TutorialLevel7)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial7");
+        }
     }
 
 
@@ -384,12 +418,12 @@ public class GameManager : MonoBehaviour {
             //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
             Application.LoadLevel("_Scenes/Tutorial2");
         }
-        if (currentLevel is TutorialLevel2)
+        else if (currentLevel is TutorialLevel2)
         {
             //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
             Application.LoadLevel("_Scenes/Tutorial3");
         }
-        if (currentLevel is TutorialLevel3)
+        else if (currentLevel is TutorialLevel3)
         {
             //Destroying the SoundManager.instance.gameObject is how you make song stop repeating
             //and actually use the soundmanager that is in the level
@@ -397,10 +431,25 @@ public class GameManager : MonoBehaviour {
             //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
             Application.LoadLevel("_Scenes/Tutorial4");
         }
-        if (currentLevel is TutorialLevel4)
+        else if (currentLevel is TutorialLevel4)
         {
             //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
-            Application.LoadLevel("_Scenes/Tutorial4");
+            Application.LoadLevel("_Scenes/Tutorial5");
+        }
+        else if (currentLevel is TutorialLevel5)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial6");
+        }
+        else if (currentLevel is TutorialLevel6)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial7");
+        }
+        else if (currentLevel is TutorialLevel7)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial7");
         }
     }
 }

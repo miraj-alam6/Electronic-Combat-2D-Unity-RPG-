@@ -8,31 +8,57 @@ public class Enemy : Unit {
     public int playerDamage; //amount of damage inflicted onto the player
     public int direction = 1;
     private Animator animator;
-    private Transform target; //stores player's position that will tell enemy where to move
+    
     private bool skipMove; //use this to make enemy move every other turn
     
     public AudioClip enemyAttackSound1;
     public AudioClip enemyAttackSound2;
     public List<int> movesToDo;
-   // private bool dyingAnim = false;
-    //public int MoveCount = 6;
+    public bool canBreakWalls = false;
+    public string targetName = "Kali";
+    private Transform targetTransform; //stores player's position that will tell enemy where to move
+                                       // private bool dyingAnim = false;
+                                       //public int MoveCount = 6;
 
     // Use this for initialization
+
+    public int getTargetX() {
+        for (int i = 0; i < GameManager.instance.players.Count; i++) {
+            if (GameManager.instance.players[i].name.Equals(targetName)) {
+                return GameManager.instance.players[i].x;
+            }
+        }
+        return 0;
+    }
+
+    public int getTargetY()
+    {
+        for (int i = 0; i < GameManager.instance.players.Count; i++)
+        {
+            if (GameManager.instance.players[i].name.Equals(targetName))
+            {
+
+                return GameManager.instance.players[i].y;
+            }
+        }
+        return 0;
+    }
+
     protected override void Start () {
         //First off, enemy must add itself to the game manager
 
         isPlayer = false;
         GameManager.instance.AddEnemyToList(this);
         animator = GetComponent<Animator>();
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        targetTransform = GameObject.FindGameObjectWithTag("Player").transform;
         base.Start();
         GameManager.instance.gameCalculation.actualGrid[y, x].hasEnemy = true;
         GameManager.instance.gameCalculation.actualGrid[y, x].walkable = false;
         if (displayVitals)
         {
             VitalBar[] vitals = GetComponentsInChildren<VitalBar>();
-            Debug.Log(vitals[0].type);
-            Debug.Log(vitals[1].type);
+          //  Debug.Log(vitals[0].type);
+          //  Debug.Log(vitals[1].type);
             if (vitals[0].type.Equals("HEALTH"))
             {
                 healthBar = vitals[0];
@@ -71,15 +97,18 @@ public class Enemy : Unit {
         // int destinationX = (int) GameObject.FindGameObjectWithTag("Player").transform.position.x;
         // int destinationY = (int)GameObject.FindGameObjectWithTag("Player").transform.position.y;
         int playerIndex = Random.Range(0,GameManager.instance.players.Count);
-        Debug.Log(playerIndex);
-        int destinationX = GameManager.instance.players[playerIndex].x;
-        int destinationY = GameManager.instance.players[playerIndex].y;
-        Debug.Log("Current Position:" + x + "," + y);
-        Debug.Log("Player Position:" + destinationX + ","+ destinationY);
+        //Debug.Log(playerIndex);
+        int destinationX = getTargetX();
+        int destinationY = getTargetY();
+       // Debug.Log("Current Position:" + x + "," + y);
+       /// Debug.Log("Player Position:" + destinationX + ","+ destinationY);
         
-        movesToDo = GameManager.instance.gameCalculation.getShortestPath(x,y,destinationX,destinationY);
-        GameManager.instance.gameCalculation.printList(movesToDo);
-        Debug.Log("End Think");
+        movesToDo = GameManager.instance.gameCalculation.getShortestPath(x,y,destinationX,destinationY,false);
+        if (movesToDo.Count <= 0 && canBreakWalls) {
+            movesToDo = GameManager.instance.gameCalculation.getShortestPath(x, y, destinationX, destinationY, true);
+        }
+       // GameManager.instance.gameCalculation.printList(movesToDo);
+      //  Debug.Log("End Think");
     }
     //T is the player for this class
     protected override void AttemptMove<T>(int xDir, int yDir)
@@ -163,7 +192,9 @@ public class Enemy : Unit {
         GameManager.instance.stopAll = false;
     }
 
-    public void LoseHP(int attack)
+    //changed this to a bool. It returns true if the enemy was killed, and false if the
+    //enemy was not killed.
+    public bool LoseHP(int attack)
     {
      
         HP -= (attack - defense);
@@ -192,6 +223,7 @@ public class Enemy : Unit {
         {
             animator.SetTrigger("HitLeft");
         }
+        return (HP == 0);
     }
     //now the abstract function
     protected override void OnCantMove<T>(T component)
@@ -199,10 +231,20 @@ public class Enemy : Unit {
         if (component is Wall)
         {
             Wall hitWall = component as Wall; //reminder: as casts something
-            hitWall.DamageWall(3);
+            if (name.Equals("RedRobo")) {
+                hitWall.DamageWall(4* attack);
+            }
+            else {
+                hitWall.DamageWall(attack);
+                    };
             movePoints--;
         }
-
+        if (component is Pot)
+        {
+            Pot hitPot = component as Pot; //reminder: as casts something
+            hitPot.DamagePot(attack);
+            movePoints--;
+        }
         if (component is Player) {
             LoseATB((int)(ATBCost * 0.5)); 
             SoundManager.instance.RandomizeSfx(enemyAttackSound1,enemyAttackSound2);

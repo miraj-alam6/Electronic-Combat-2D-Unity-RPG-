@@ -4,9 +4,11 @@ using System.Collections;
 
 public abstract class Unit : MonoBehaviour { //abstract because two both player and enemy will inherit
                                              //absract makes the class incomplete and will have to be completed by the child class
+    public string name;
     public int MaxHP;
     public int HP;
     public int attack;
+    public bool InflictDamage = true;
     public int defense;
     public bool dead = false;
     public int speed;
@@ -31,7 +33,19 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
     public VitalBar healthBar;
     public VitalBar ATBBar;
     public GameObject VitalsWrapper;
+    public SpecialGauge specialGauge;
+    public SpriteRenderer spriteRenderer;
+    public Color originalColor;
+    public int specialGainRate;
+    public Material originalMaterial;
+    //flashMaterial is set in inspector, it is the font material
+    public Material flashMaterial;
+
     protected virtual void Start () { //protected virtual can be overridden by inherting classes
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
+        originalMaterial = spriteRenderer.material;
+
         x = (int)GetComponent<Transform>().position.x;
         y = (int)GetComponent<Transform>().position.y;
         previousX = x;
@@ -45,11 +59,38 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
         if (GetComponentInChildren<VitalIdentifier>().gameObject) { 
             VitalsWrapper = GetComponentInChildren<VitalIdentifier>().gameObject;
         }
-
+        if ((GetComponentInChildren<SpecialGauge>().gameObject)) {
+            specialGauge = GetComponentInChildren<SpecialGauge>();
+        }
     }
 
     public void Update() {
         
+    }
+
+    public void flashWhite(float time) {
+        spriteRenderer.material = flashMaterial;
+        spriteRenderer.color = Color.white;
+        Invoke("becomeNormal",time);
+    }
+    public void turnRed()
+    {
+       // spriteRenderer.material = flashMaterial;
+        spriteRenderer.color = Color.red;
+       // Invoke("becomeNormal", time);
+    }
+
+    public void turnBlue()
+    {
+        spriteRenderer.color = Color.blue;
+    }
+    public void turnYellow()
+    {
+        spriteRenderer.color = Color.yellow;
+    }
+    public void becomeNormal() {
+        spriteRenderer.material = originalMaterial;
+        spriteRenderer.color = originalColor;
     }
     //Move using XDir and yDir.
     protected bool Move(int xDir, int yDir, out RaycastHit2D hit) //out keyword causes it to be passed by reference instead of value
@@ -75,7 +116,8 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
             if (isPlayer)
             {
                 GameManager.instance.gameCalculation.actualGrid[y, x].hasPlayer = false;
-                GameManager.instance.gameCalculation.actualGrid[y, x].walkable = true;
+                GameManager.instance.gameCalculation.actualGrid[y, x].walkable = true; 
+               
             }
             else
             {
@@ -90,6 +132,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
             if (isPlayer) {
                 GameManager.instance.gameCalculation.actualGrid[y, x].hasPlayer = true;
                 GameManager.instance.gameCalculation.actualGrid[y, x].walkable = false;
+                Debug.Log("giddy up");
             }
             else
             {
@@ -167,12 +210,31 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
         }
     }
 
+    public void gainHP(int gain)
+    {
+        HP += gain;
+        if (HP > MaxHP)
+        {
+            HP = MaxHP;
+        }
+        if (healthBar)
+        {
+            healthBar.UpdateVitalBar(MaxHP, HP);
+        }
+        
+        if (name.Equals("Kali"))
+        {
+            GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliHP(MaxHP, HP);
+        }
+    }
 
     //Fill up ATB gauge with your speed
+    // NOTE: once ATB > 100 you get a baseline special boost
     public void applySpeed() {
         ATB += Random.Range(minSpeed, maxSpeed);
         if (ATB >= 100)
         {
+            specialGauge.AddSpecialValue(specialGainRate);
             ATB = 100;
             ATBBar.BecomeGreen();
         }

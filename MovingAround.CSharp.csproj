@@ -79,6 +79,10 @@
     <Compile Include="Assets\Completed\Scripts\Wall.cs" />
     <Compile Include="Assets\Scripts\BoardManager.cs" />
     <Compile Include="Assets\Scripts\Bullet.cs" />
+    <Compile Include="Assets\Scripts\Characters\Character.cs" />
+    <Compile Include="Assets\Scripts\Characters\Hugo.cs" />
+    <Compile Include="Assets\Scripts\Characters\Kali.cs" />
+    <Compile Include="Assets\Scripts\Characters\Winoa.cs" />
     <Compile Include="Assets\Scripts\Collectible.cs" />
     <Compile Include="Assets\Scripts\Data.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
@@ -92,6 +96,9 @@
     <Compile Include="Assets\Scripts\Levels\TutorialLevel2.cs" />
     <Compile Include="Assets\Scripts\Levels\TutorialLevel3.cs" />
     <Compile Include="Assets\Scripts\Levels\TutorialLevel4.cs" />
+    <Compile Include="Assets\Scripts\Levels\TutorialLevel5.cs" />
+    <Compile Include="Assets\Scripts\Levels\TutorialLevel6.cs" />
+    <Compile Include="Assets\Scripts\Levels\TutorialLevel7.cs" />
     <Compile Include="Assets\Scripts\Loader.cs" />
     <Compile Include="Assets\Scripts\MessageUI.cs" />
     <Compile Include="Assets\Scripts\PathNode.cs" />
@@ -100,6 +107,7 @@
     <Compile Include="Assets\Scripts\ScavengerEnemy.cs" />
     <Compile Include="Assets\Scripts\SoundManager.cs" />
     <Compile Include="Assets\Scripts\Space.cs" />
+    <Compile Include="Assets\Scripts\SpecialGauge.cs" />
     <Compile Include="Assets\Scripts\Unit.cs" />
     <Compile Include="Assets\Scripts\VitalBar.cs" />
     <Compile Include="Assets\Scripts\VitalIdentifier.cs" />

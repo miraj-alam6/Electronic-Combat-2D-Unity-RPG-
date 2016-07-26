@@ -64,7 +64,7 @@ public class Bullet : MonoBehaviour
         {
             if (other.GetComponent<Wall>())
             {
-                other.GetComponent<Wall>().DamageWall(500);
+                other.GetComponent<Wall>().DamageWall(bulletDamage);
             }
         }
         else if (other.tag == "Pot")
@@ -77,8 +77,10 @@ public class Bullet : MonoBehaviour
 
         else if (other.tag == "Enemy")
         {
+           // Debug.Log("what what in the ");
             if (other.GetComponent<Enemy>())
             {
+                Debug.Log(bulletDamage);
                 other.GetComponent<Enemy>().LoseHP(bulletDamage);
             }
         }

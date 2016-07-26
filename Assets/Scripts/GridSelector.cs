@@ -4,6 +4,8 @@ using System.Collections;
 public class GridSelector : MonoBehaviour {
     public int x;
     public int y;
+    public string message = "What";
+    public string shortmessage = "Nothing";
     private BoxCollider2D boxCollider;
     private Rigidbody2D rb2D;
     private float inverseMoveTime; //makes movement calculation more efficient
@@ -61,18 +63,69 @@ public class GridSelector : MonoBehaviour {
                 vertical = 0;
             }
 
-            Debug.Log("AKSAR" + horizontal + "," + vertical);
+            //Debug.Log("AKSAR" + horizontal + "," + vertical);
             isActive = false;
             Move(horizontal,vertical);
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.tag == "Player")
+        {
+            Player player = other.gameObject.GetComponent<Player>();
+            shortmessage = "player";
+            message = "" + player.name + " HP:" + player.HP + "\n"
+            + "ATG Rate: " + player.minSpeed + "-" + player.maxSpeed + "\n"
+            + "ATG Cost:" + player.ATBCost + "\n"
+            + "ATK: " + player.attack + " DEF:" + player.defense;
+            Debug.Log("Player");
+        }
+        else if (other.tag == "Bullet")
+        {
+
+            Debug.Log("Bullet");
+        }
+        else if (other.tag == "Collectible")
+        {
+            Debug.Log(other.gameObject.GetComponent<Collectible>().name);
+        }
+        else if (other.tag == "GridSelector")
+        {
+            Debug.Log("this shouldn't be possible");
+        }
+        else if (other.tag == "Wall")
+        {
+            Wall wall = other.GetComponent<Wall>();
+            message = "Wall HP:" + wall.hp;
+            shortmessage = "wall";
+            Debug.Log("Wall with HP: " + other.gameObject.GetComponent<Wall>().hp);
+        }
+        else if (other.tag == "Pot")
+        {
+            Debug.Log("Pot with HP: " + other.gameObject.GetComponent<Pot>().hp);
+        }
+
+        else if (other.tag == "Enemy")
+        {
+            Enemy enemy = other.GetComponent<Enemy>();
+            shortmessage = "enemy";
+            Debug.Log("Enemy with HP: " + other.gameObject.GetComponent<Enemy>().HP);
+            message = "" + enemy.name + " HP:" + enemy.HP + "\n"
+            + "ATG Rate: " + enemy.minSpeed + "-" + enemy.maxSpeed + "\n"
+            + "ATG Cost:" + enemy.ATBCost + "\n"
+            + "ATK: " + enemy.attack + " DEF:" + enemy.defense;
+            Debug.Log("Player");
+        }
+        
+    }
     public bool Move(int xDir, int yDir) 
     {
+        message = "Nothing here";
+        shortmessage = "none";
         Vector3 start = transform.position; //implicitly discards transform.position's z 
         //axis thus converting a vector3 to a vector2 without need for an explicit cast
         Vector3 end = start + new Vector3(xDir, yDir,0); 
-        Debug.Log(start.x + "," + start.y + "," + end.x + "," + end.y);
+        //Debug.Log(start.x + "," + start.y + "," + end.x + "," + end.y);
         //Not gonna use raycasting
         //disable own boxCollider so that we can cast our ray without hitting ourself
         // boxCollider.enabled = false; //SUPER IMPORTANT: make sure you turn it back on before function
@@ -94,7 +147,7 @@ public class GridSelector : MonoBehaviour {
                 isActive = true;
                 return false;
             }
-            Debug.Log("End:" + xDir + "," + yDir);
+            //Debug.Log("End:" + xDir + "," + yDir);
             StartCoroutine(SmoothMovement(end));
             return true; //this means we were able to move.
         }
