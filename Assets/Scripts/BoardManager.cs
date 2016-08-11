@@ -47,8 +47,14 @@ public class BoardManager : MonoBehaviour {
 
     void BoardSetup() {
         boardHolder = new GameObject("Board").transform;
-        gameCalculation.initializeGameCalculation(columns, rows, 1);
-
+        if (GameManager.instance.currentLevel is TutorialLevel9)
+        {
+            Debug.Log("First level that is bigger than camera");
+            gameCalculation.initializeGameCalculation(12, 12, 1);
+        }
+        else { 
+            gameCalculation.initializeGameCalculation(columns, rows, 1);
+        }
         //Comment all the following out since our board is already made in the editor
         /*
         //-1 for start and +1 for end is because we want to instantiate the outer walls as well

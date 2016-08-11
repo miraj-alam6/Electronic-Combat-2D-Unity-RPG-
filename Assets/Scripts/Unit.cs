@@ -12,6 +12,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
     public int defense;
     public bool dead = false;
     public int speed;
+    public bool weInTutorialLevel6 = false;
     public float moveTime = 0.1f; //this is the time it takes for the object to move in seconds.
     public int movePoints;
     public int maxMovePoints;
@@ -19,6 +20,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
     public int maxSpeed; // This is upper limit. A random value will be chosen each time to add to the ATB bar
     public int ATB = 0; //Once this exceeds 100 this unit will be able to move
     public int ATBCost = 10; //The higher this value, the quicker your ATB drains as you do moves
+    public int direction = 1; // 1 is for down, 2 is for up, 3 for right, 4 is for left
     [HideInInspector]public bool isPlayer;
     public LayerMask blockingLayer; //this is the layer where we check collision to see if space open
     // Use this for initialization
@@ -38,6 +40,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
     public Color originalColor;
     public int specialGainRate;
     public Material originalMaterial;
+    public Animator animator;
     //flashMaterial is set in inspector, it is the font material
     public Material flashMaterial;
 
@@ -45,7 +48,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
         originalMaterial = spriteRenderer.material;
-
+        animator = GetComponent<Animator>();
         x = (int)GetComponent<Transform>().position.x;
         y = (int)GetComponent<Transform>().position.y;
         previousX = x;
@@ -68,6 +71,9 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
         
     }
 
+    public bool checkIfBackAttack(int attackerDirection, int victimDirection) {
+        return (attackerDirection == victimDirection);
+    }
     public void flashWhite(float time) {
         spriteRenderer.material = flashMaterial;
         spriteRenderer.color = Color.white;
@@ -83,6 +89,13 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
     public void turnBlue()
     {
         spriteRenderer.color = Color.blue;
+    }
+    public void turnCyan()
+    {
+        spriteRenderer.color = Color.cyan;
+    }
+    public void turnGreen() {
+        spriteRenderer.color = Color.green;
     }
     public void turnYellow()
     {
@@ -129,10 +142,11 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
             }
             x = x + xDir;
             y = y + yDir;
+            
             if (isPlayer) {
                 GameManager.instance.gameCalculation.actualGrid[y, x].hasPlayer = true;
                 GameManager.instance.gameCalculation.actualGrid[y, x].walkable = false;
-                Debug.Log("giddy up");
+                //Debug.Log("giddy up");
             }
             else
             {
@@ -165,6 +179,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
         //needed to be able to collide with stuff again
         if (hit.transform == null)
         {
+           
             return true; //this means we were able to move.
         }
         return false;
@@ -185,6 +200,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
             sqrRemainingDistance = (transform.position - end).sqrMagnitude;
             yield return null; //this means wait for a frame before reevaluating this loop
         }
+        
     }
     
     //will have a generic field
@@ -209,6 +225,24 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
             OnCantMove(hitComponent);
         }
     }
+    public void tutorial6Helper()
+    {
+
+        if (weInTutorialLevel6)
+        {
+            if (name.Equals("Kali") && specialGauge.GetSpecialValue() >= 80)
+            {
+                ((TutorialLevel6)GameManager.instance.currentLevel).kaliHasEnough = true;
+                GameManager.instance.currentLevel.turnBehavior();
+            }
+            if (name.Equals("Winoa") && specialGauge.GetSpecialValue() >= 75)
+            {
+                ((TutorialLevel6)GameManager.instance.currentLevel).winoaHasEnough = true;
+                GameManager.instance.currentLevel.turnBehavior();
+            }
+        }
+       
+    }
 
     public void gainHP(int gain)
     {
@@ -231,9 +265,13 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
     //Fill up ATB gauge with your speed
     // NOTE: once ATB > 100 you get a baseline special boost
     public void applySpeed() {
+        if (ATB <= 0) {
+            ATB = 0;
+        }
         ATB += Random.Range(minSpeed, maxSpeed);
         if (ATB >= 100)
         {
+            GameManager.instance.RefreshMessage();
             specialGauge.AddSpecialValue(specialGainRate);
             ATB = 100;
             ATBBar.BecomeGreen();
@@ -245,6 +283,35 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
         {
             GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliATB(100, ATB);
         }
+    }
+
+    public void SetATB(int val)
+    {
+        ATB = val;
+        if (ATB <= 0)
+        {
+            ATB = 0;
+            //wrap next line in safety
+            ATBBar.BecomeBlue();
+
+        }
+        if (ATB >= 100)
+        {
+            ATB = 100;
+            //wrap next line in safety
+            ATBBar.BecomeGreen();
+
+        }
+        if (ATBBar)
+        {
+            ATBBar.UpdateVitalBar(100, ATB);
+            if (name.Equals("Kali"))
+            {
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliATB(100, ATB);
+            }
+        }
+
+
     }
 
     public void LoseATB(int val)
@@ -264,6 +331,28 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
             }
         }
 
+
+    }
+
+    public void setDirection(int direction)
+    {
+        this.direction = direction;
+        if (direction == 1)
+        {
+            animator.SetTrigger("FaceDown");
+        }
+        else if (direction == 2)
+        {
+            animator.SetTrigger("FaceUp");
+        }
+        else if (direction == 3)
+        {
+            animator.SetTrigger("FaceRight");
+        }
+        else if (direction == 4)
+        {
+            animator.SetTrigger("FaceLeft");
+        }
     }
     //now the abstract function that was invoked in earlier code, 
     //something that isn't implemented here in the parent class

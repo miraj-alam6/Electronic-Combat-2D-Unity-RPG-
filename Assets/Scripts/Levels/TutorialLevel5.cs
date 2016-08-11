@@ -4,6 +4,10 @@ using System.Collections;
 public class TutorialLevel5 : Level
 {
     int deadEnemies = 0;
+    public TutorialLevel5(int deaths) : base((deaths))
+    {
+
+    }
 
     public override void updateLevel(string message)
     {
@@ -21,6 +25,23 @@ public class TutorialLevel5 : Level
             // Can't do next line here, need monobehavior
             //Invoke("Restart", 1); //this will call the function 1 second after colliding
             GameManager.instance.DoneWithLevel();
+        }
+    }
+
+    public override void turnBehavior()
+    {
+        if (hintsOn)
+        {
+
+            if (turnCount == 1)
+            {
+                GameManager.instance.showMessage("Different types of enemies have different stats. Even different units of the same enemy type can have slightly different stats.");
+            }
+
+            if (deathCount > 5 && turnCount == 2)
+            {
+                GameManager.instance.showMessage("HINT: Range attacks are important af sometimes.");
+            }
         }
     }
 }

@@ -6,10 +6,12 @@ public class GridSelector : MonoBehaviour {
     public int y;
     public string message = "What";
     public string shortmessage = "Nothing";
+    public bool analyzedAlready = true; //tells you if the message was already analyzed
     private BoxCollider2D boxCollider;
     private Rigidbody2D rb2D;
     private float inverseMoveTime; //makes movement calculation more efficient
     public float moveTime = 0.1f;
+    public GameObject selectedObject;
     private bool isActive = false;
     private bool noSelector = true; // this is true when there is no selector on the screen.
     //This is different from the built in Unity quality of being active. Active in this class just
@@ -57,6 +59,7 @@ public class GridSelector : MonoBehaviour {
             {
                 return;
             }
+            
             //following will prevent diagonal moving
             if (horizontal != 0)
             {
@@ -65,6 +68,7 @@ public class GridSelector : MonoBehaviour {
 
             //Debug.Log("AKSAR" + horizontal + "," + vertical);
             isActive = false;
+            GameManager.instance.UpdateCamera();
             Move(horizontal,vertical);
         }
     }
@@ -72,6 +76,7 @@ public class GridSelector : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Player")
         {
+            analyzedAlready = true;
             Player player = other.gameObject.GetComponent<Player>();
             shortmessage = "player";
             message = "" + player.name + " HP:" + player.HP + "\n"
@@ -87,7 +92,13 @@ public class GridSelector : MonoBehaviour {
         }
         else if (other.tag == "Collectible")
         {
-            Debug.Log(other.gameObject.GetComponent<Collectible>().name);
+            string typeCollectible = other.gameObject.GetComponent<Collectible>().type;
+            Debug.Log(typeCollectible);
+            if (typeCollectible.Equals("Chicken")) {
+                analyzedAlready = true;
+                shortmessage = "chicken";
+                message = "A flower that\ngrows and cooks\nchicken. Great\nprotein and fiber.";
+            }
         }
         else if (other.tag == "GridSelector")
         {
@@ -96,10 +107,22 @@ public class GridSelector : MonoBehaviour {
         else if (other.tag == "Wall")
         {
             Wall wall = other.GetComponent<Wall>();
+            analyzedAlready = wall.analyzedAlready;
+            selectedObject = wall.gameObject;
             message = "Wall HP:" + wall.hp;
             shortmessage = "wall";
             Debug.Log("Wall with HP: " + other.gameObject.GetComponent<Wall>().hp);
         }
+        else if (other.tag == "PermaWall")
+        {
+            //PermaWall wall = other.GetComponent<PermaWall>();
+            analyzedAlready = true;
+            //selectedObject = wall.gameObject;
+            message = "Strong Wall:\nCannot be\nbroken";
+            shortmessage = "permawall";
+           
+        }
+
         else if (other.tag == "Pot")
         {
             Debug.Log("Pot with HP: " + other.gameObject.GetComponent<Pot>().hp);
@@ -107,7 +130,9 @@ public class GridSelector : MonoBehaviour {
 
         else if (other.tag == "Enemy")
         {
+            selectedObject = other.gameObject;
             Enemy enemy = other.GetComponent<Enemy>();
+            analyzedAlready = enemy.analyzedAlready;
             shortmessage = "enemy";
             Debug.Log("Enemy with HP: " + other.gameObject.GetComponent<Enemy>().HP);
             message = "" + enemy.name + " HP:" + enemy.HP + "\n"
@@ -172,5 +197,16 @@ public class GridSelector : MonoBehaviour {
             yield return null; //this means wait for a frame before reevaluating this loop
         }
         isActive = true;
+    }
+
+    public void setAnalyzed() {
+        if (shortmessage.Equals("enemy")) {
+            selectedObject.GetComponent<Enemy>().analyzedAlready = true;
+        }
+        else if (shortmessage.Equals("wall"))
+        {
+            selectedObject.GetComponent<Wall>().analyzedAlready = true;
+        }
+        analyzedAlready = true;
     }
 }

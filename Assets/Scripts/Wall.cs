@@ -10,6 +10,7 @@ public class Wall : MonoBehaviour {
 	// Use this for initialization
 	public int hp = 4; //this is the health of the wall
     public int x, y;
+    public bool analyzedAlready = false;
     private SpriteRenderer spriteRenderer;
     void Start() {
         x = (int)GetComponent<Transform>().position.x;

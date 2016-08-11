@@ -5,6 +5,7 @@ public class Space{
 
     //public Space parent; actualgrid shouldn't have parents for their nodes, pathgrid does.
     public bool walkable = true;
+    public bool hasPermaWall = false;
     public bool hasWall = false;
     public bool hasPot = false;
     public bool hasEnemy = false;

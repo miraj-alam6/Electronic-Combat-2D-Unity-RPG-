@@ -11,17 +11,16 @@ public class Player : Unit {
     public int pointsPerFood = 10;
     public int pointsPerSoda = 20;
     public int bulletCost;
-    public bool triggerCoolDown = false;
+    public bool inputCoolDown = false;
     
-    public int triggerCoolDownCounter = 0;
-    private int direction = 1; // 1 is for down, 2 is for up, 3 for right, 4 is for left
-                               //both of the above have values that will be the value added to player's score when consumed.
-    private bool shooting = false;
+    public int inputCoolDownCounter = 0;
+    
+    [HideInInspector]public bool shooting = false;
     
     public float restartLevelDelay = 1f;
     public Text foodText;
     public bool isActivePlayer = false;
-    private Animator animator;
+    //private Animator animator;
     //private int food; //stores score during level before passing it back to game manager.
 
     //Sound effects for the player
@@ -78,9 +77,10 @@ public class Player : Unit {
     }
     // Update is called once per frame
     //we're gonna check if it's player turn or not
-    void FixedUpdate() {
+    void Update() {
         //Following is for moving around
         base.Update();
+
         if (dead)
         {
             dead = false;
@@ -89,201 +89,67 @@ public class Player : Unit {
 
             //Destroy(this.gameObject);
         }
-        if (triggerCoolDown)
+        int padHorizontal = 0;
+        int padVertical = 0;
+
+        padHorizontal = (int)Input.GetAxisRaw("Pad Horizontal");
+        padVertical = (int)Input.GetAxisRaw("Pad Vertical");
+        if (padHorizontal != 0 || padVertical != 0)
         {
-            triggerCoolDownCounter++;
-            if (triggerCoolDownCounter >= 20) {
-                triggerCoolDownCounter = 0;
-                triggerCoolDown = false;
+            dpad(padHorizontal, padVertical);
+        }
+
+        if (Input.GetButtonDown("Submit"))
+        {
+            submit();
+            return;
+        }
+
+        //for now, the menu button will turn hints on and off
+        if (Input.GetButtonDown("Menu"))
+        {
+            menu();
+            return;
+        }
+
+        if (!isActivePlayer) {
+            return;
+        }
+
+       
+
+        if (inputCoolDown)
+        {
+            inputCoolDownCounter++;
+            if (inputCoolDownCounter >= 20) {
+                inputCoolDownCounter = 0;
+                inputCoolDown = false;
                 stopShooting = false;
             }
         }
-        if (!isActivePlayer || !GameManager.instance.singlePlayerMove || !GameManager.instance.playersTurn
-            || GameManager.instance.enemiesMoving || GameManager.instance.stopAll)
-        {
-            return;
+        
+
+        if (Input.GetButtonDown("Cancel")){
+            cancel();
         }
-
-        if (shooting) {
-            if (Input.GetButtonDown("Cancel") || stopShooting){
-                
-               // Debug.Log("Let me borrow that top");
-                GameObject gridSelector = GameObject.FindGameObjectWithTag("GridSelector");
-                gridSelector.GetComponent<GridSelector>().disappear();
-                shooting = false;
-                triggerCoolDown = true;
-            }
-            if (Input.GetAxisRaw("Shoot") > 0) {
-
-                if (triggerCoolDown)
-                {
-                    return;
-                }
-
-                
-                triggerCoolDown = true;
-                
-                //Debug.Log("Cuatemoc");
-                animator.ResetTrigger("FaceLeft");
-                animator.ResetTrigger("FaceRight");
-                animator.ResetTrigger("FaceUp");
-                animator.ResetTrigger("FaceDown");
-                GameObject gridSelector = GameObject.FindGameObjectWithTag("GridSelector");
-                int gridX = gridSelector.GetComponent<GridSelector>().x;
-                int gridY = gridSelector.GetComponent<GridSelector>().y;
-
-                //this stops the bullet from appearing at the moment that you press the button first time
-                if (gridX == x && gridY == y && !name.Equals("Hugo"))
-                {
-                    return;
-                }
-
-                if (ATB <= 0) {
-                    stopShooting = true;
-                    return;
-                }
-                stopShooting = !(character.fireWeapon(this, gridSelector));
-                
-                
-               // GameObject bullet = Instantiate(greenBullet, new Vector3(x, y, 0), Quaternion.identity)
-               //     as GameObject;
-                int xDiff = gridX - x;
-                int yDiff = gridY - y;
-
-                if (Math.Abs(xDiff) > Math.Abs(yDiff))
-                {
-
-                    if (xDiff > 0)
-                    {
-                        animator.SetTrigger("FaceRight");
-                    }
-
-                    else
-                    {
-                        animator.SetTrigger("FaceLeft");
-                    }
-
-                }
-                else {
-                    if (yDiff > 0)
-                    {
-                        animator.SetTrigger("FaceUp");
-                    }
-
-                    else
-                    {
-                        animator.SetTrigger("FaceDown");
-                    }
-                }
-
-               // bullet.GetComponent<Bullet>().tempDestX = gridX;
-               // bullet.GetComponent<Bullet>().tempDestY = gridY;
-               // bullet.GetComponent<Bullet>().destinationSet = true;
-            }
-            return;
+        if (Input.GetAxisRaw("Shoot") > 0) {
+            rightTrigger();
         }
-
-//        if (Input.GetButtonDown("Submit")){
- //           GameManager.instance.gameCalculation.printGrid();
- //       }
 
         //these are commands besides moving around
-        //looks kinda sloppy, later, make actual triggers that just make you switch to IdleUp
-        if (isActivePlayer) {
-            //Debug.Log(Input.GetAxisRaw("Shoot"));
-            if (Input.GetButtonDown("Special")) {
-                GameManager.instance.gameCalculation.printGrid();
-                character.StartSpecial(this);
-            }
-            if (Input.GetAxisRaw("Shoot") > 0) {
-                GameObject gridSelector = GameObject.FindGameObjectWithTag("GridSelector");
-                (gridSelector.GetComponent<GridSelector>()).appear();
-                gridSelector.transform.position  = new Vector3(x,y,0);
-                (gridSelector.GetComponent<GridSelector>()).x = x;
-                (gridSelector.GetComponent<GridSelector>()).y = y;
-                (gridSelector.GetComponent<GridSelector>()).makeActive();
-
-                //Debug.Log(gridSelector);
-                shooting = true;
-                return;
-            }
-            animator.ResetTrigger("FaceLeft");
-            animator.ResetTrigger("FaceRight");
-            animator.ResetTrigger("FaceUp");
-            animator.ResetTrigger("FaceDown");
-
-            int padHorizontal = 0;
-            int padVertical = 0;
-
-            padHorizontal = (int)Input.GetAxisRaw("Pad Horizontal");
-            padVertical = (int)Input.GetAxisRaw("Pad Vertical");
-
-            if (padVertical == 1)
-            {
-                // Debug.Log("what");
-                direction = 2;                
-                animator.SetTrigger("FaceUp");
-            }
-            else if (padVertical == -1) {
-                direction = 1;
-                animator.SetTrigger("FaceDown");
-            }
-            else if (padHorizontal == -1)
-            {
-                direction = 4;
-                animator.SetTrigger("FaceLeft");
-            }
-            else if (padHorizontal == 1)
-            {
-                //why in the blue hell was this here, caused a glitched GetComponent<Collider2D>().enabled = false;
-                direction = 3;
-                animator.SetTrigger("FaceRight");
-            }
-            //Skip turn: you can end turn whenever you want with Backspace
-            if (Input.GetButtonDown("Start") && GameManager.instance.singlePlayerMove)
-                //you need the second of the above conditions to prevent mashed output from messing you
-                //up
-            {
-                character.wasteSpecial(this);
-                movePoints = -200;
-                LoseATB(400);
-                ATB = -200;
-                GameManager.instance.playersTurn = false;
-                GameManager.instance.singlePlayerMove = false;
-                //  GameManager.instance.singlePlayerMove = false;
-                //GameManager.instance.enemiesMoving = true;
-                //GameManager.instance.currentUnit = null; can't do this here because the loop in
-                //GameManager might in the middle of running when it happens, since parallel processes
-                isActivePlayer = false;
-                //i wanna just make a pause
-                // StartCoroutine(GameManager.instance.MoveUnits());
-                GameManager.instance.readyToDestroyPlayerTurn = true;
-                return;
-            }
-
-            //once moves are 0, you can end turn with the general confirm button, which is space
-            if (ATB <= 0) //removed movePoints <= 0, trying to streamline to only ATB
-            {
-                if (Input.GetButtonDown("Submit") && GameManager.instance.singlePlayerMove)
-                {
-                    ATB = -200;
-                    movePoints = -200;
-                    character.wasteSpecial(this);
-                    GameManager.instance.playersTurn = false;
-                    GameManager.instance.singlePlayerMove = false;
-                    //  GameManager.instance.singlePlayerMove = false;
-                    //GameManager.instance.enemiesMoving = true;
-                    //GameManager.instance.currentUnit = null; can't do this here because the loop in
-                    //GameManager might in the middle of running when it happens, since parallel processes
-                    isActivePlayer = false;
-                    //i wanna just make a pause
-                    // StartCoroutine(GameManager.instance.MoveUnits());
-                    GameManager.instance.readyToDestroyPlayerTurn = true;
-                }
-                return;
-            }
+        if (Input.GetButtonDown("Special")) {
+            //GameManager.instance.gameCalculation.printGrid();
+            rightBumper();
         }
-        
+            //Skip turn: you can end turn whenever you want with Backspace
+        if (Input.GetButtonDown("Start"))
+        //you need the second of the above conditions to prevent mashed output from messing you
+        //up
+        {
+            Invoke("startButton",0.3f);
+            return;
+        }
+
 
         
 
@@ -295,20 +161,11 @@ public class Player : Unit {
 
         horizontal = (int)Input.GetAxisRaw("Horizontal");
         vertical = (int)Input.GetAxisRaw("Vertical");
-
-        //following will prevent diagonal moving
-        if (horizontal != 0) {
-            vertical = 0;
-        }
-
-        //now process the movement if there is one
         if (horizontal != 0 || vertical != 0) {
-            AttemptMove<MonoBehaviour>(horizontal, vertical); //this means that we are expecting
-            //I changed the Wall to just MonoBehavior, might not need the abstract function
-            //that the player may encounter a wall when moving
-            //enemyscript will expect to be interacting with a player
-
+            mainstick(horizontal,vertical);
         }
+
+
     }
 
     //Having <T> there, but then having no T is your parameters means that
@@ -477,6 +334,7 @@ public class Player : Unit {
             if (hitWall.DamageWall(attack))
             {
                 specialGauge.AddSpecialValue((int)(1.5* specialGainRate));
+                tutorial6Helper();
             }
             movePoints -= 2;
             LoseATB((int)(ATBCost * 1.8));
@@ -488,8 +346,9 @@ public class Player : Unit {
             Enemy hitEnemy = component as Enemy;
             //Make the enemy lose HP, and if they die, you gain some special
             if (InflictDamage) { 
-                if (hitEnemy.LoseHP(attack)) {
+                if (hitEnemy.LoseHP(attack,direction)) {
                     specialGauge.AddSpecialValue(4*specialGainRate);
+                    tutorial6Helper();
                 }
             }
             movePoints -= 2;
@@ -504,12 +363,14 @@ public class Player : Unit {
             Pot hitPot = component as Pot;
             if (hitPot.DamagePot(attack)) {
                 specialGauge.AddSpecialValue(specialGainRate);
+                tutorial6Helper();
             }
             LoseATB((int)(ATBCost * 1.8));
             movePoints -= 2;
         }
     }
 
+ 
     //this will restart the current level. Do this for if you get game over or something.
     private void Restart() {
 
@@ -527,18 +388,16 @@ public class Player : Unit {
     
 
     //this is called when enemy attacks the player //this function was moved to unit
-    public bool LoseHP(int attack) {
-        
+    public bool LoseHP(int attack, int attackerDirection) {
+        float multiplier = 1.0f;
+
+        if (checkIfBackAttack(attackerDirection, direction))
+        {
+            multiplier = 1.4f;
+        }
 
         if (direction == 1) {
-            // TODO : IMPORTANT: busywork eventually change Kali to using HitDown instead of playerHit
-            if (name.Equals("Kali"))
-            {
-                animator.SetTrigger("playerHit");
-            }
-            else {
-                animator.SetTrigger("HitDown"); 
-            }
+            animator.SetTrigger("HitDown");
         }
         else if (direction == 2)
         {
@@ -552,8 +411,12 @@ public class Player : Unit {
         {
             animator.SetTrigger("HitLeft");
         }
-        
-        HP -= (attack - defense);
+
+        int damage = ((int)(multiplier * attack) - defense);
+        if (damage < 0) {
+            damage = 0;
+        }
+        HP -= damage;
         updateText(attack - defense,false);
         if (HP <= 0) {
             GameManager.instance.stopAll = true;
@@ -593,6 +456,254 @@ public class Player : Unit {
         GameManager.instance.gameCalculation.actualGrid[y, x].walkable = true;
         GameManager.instance.stopAll = false;
         
+    }
+
+    //The following functions will all be responses to the buttons that are pressed, changing up
+    //the way that input works from just having all the code in Update
+    public void mainstick(int xDir, int yDir)
+    {
+        
+        if (ATB <= 0 || !isActivePlayer ||  !GameManager.instance.singlePlayerMove || !GameManager.instance.playersTurn
+            || GameManager.instance.enemiesMoving || GameManager.instance.stopAll || shooting) {
+            return;
+        }
+        //following will prevent diagonal moving
+        if (xDir != 0)
+        {
+            yDir = 0;
+        }
+
+        GameManager.instance.UpdateCamera(); //realize with real eyes, why camera won't update
+        //for first move, but will update for subsequent moves.
+        AttemptMove<MonoBehaviour>(xDir, yDir); //this means that we are expecting
+            //I changed the Wall to just MonoBehavior, might not need the abstract function
+            //that the player may encounter a wall when moving
+            //enemyscript will expect to be interacting with a player
+    }
+    public void dpad(int xDir, int yDir)
+    {
+        if (isActivePlayer) {
+
+        
+            animator.ResetTrigger("FaceLeft");
+            animator.ResetTrigger("FaceRight");
+            animator.ResetTrigger("FaceUp");
+            animator.ResetTrigger("FaceDown");
+            animator.ResetTrigger("MoveLeft");
+            animator.ResetTrigger("MoveRight");
+            animator.ResetTrigger("MoveUp");
+            animator.ResetTrigger("MoveDown");
+            animator.ResetTrigger("AttackLeft");
+            animator.ResetTrigger("AttackRight");
+            animator.ResetTrigger("AttackUp");
+            animator.ResetTrigger("AttackDown");
+            if (yDir == 1)
+            {
+                // Debug.Log("what");
+            
+                if (direction != 2) {
+                    direction = 2;
+                    animator.SetTrigger("FaceUp");
+                }
+            }
+            else if (yDir == -1)
+            {
+                if (direction != 1) { 
+                    direction = 1;
+                    animator.SetTrigger("FaceDown");
+                }
+            }
+            else if (xDir == -1)
+            {
+                if (direction != 4)
+                {
+                    direction = 4;
+                    animator.SetTrigger("FaceLeft");
+                }
+            }
+            else if (xDir == 1)
+            {
+                if (direction != 3) {
+
+                    direction = 3;
+                    animator.SetTrigger("FaceRight");
+                }
+            }
+        }
+    }
+    //eventually make this how you move the camera
+    public void secondarystick(int xDir, int yDir)
+    {
+
+    }
+    public void submit()
+    {
+        if (GameManager.instance.messageBeingShown)
+        {
+            GameManager.instance.hideMessage();
+        }
+        else if (ATB <= 0 && GameManager.instance.singlePlayerMove) //removed movePoints <= 0, trying to streamline to only ATB
+        {
+            ATB = -200;
+            movePoints = -200;
+            character.wasteSpecial(this);
+            GameManager.instance.playersTurn = false;
+            GameManager.instance.singlePlayerMove = false;
+            isActivePlayer = false;
+            GameManager.instance.readyToDestroyPlayerTurn = true;
+            
+        }
+
+    }
+    public void doubleSubmit()
+    {
+
+    }
+    public void cancel()
+    {
+        if (shooting)
+        {
+            GameObject gridSelector = GameObject.FindGameObjectWithTag("GridSelector");
+            gridSelector.GetComponent<GridSelector>().disappear();
+            shooting = false;
+            inputCoolDown = true;
+            GameManager.instance.UpdateCamera();
+        }
+        
+    }
+    public void doubleCancel()
+    {
+
+    }
+
+    //tab for keyboard, use to aim and shoot 
+    public void rightTrigger()
+    {
+
+        if (!isActivePlayer || !GameManager.instance.singlePlayerMove || !GameManager.instance.playersTurn
+            || GameManager.instance.enemiesMoving || GameManager.instance.stopAll)
+        {
+            return;
+        }
+
+        if (inputCoolDown)
+        {
+            return;
+        }
+        inputCoolDown = true;
+
+        if (!shooting) {
+            GameObject gridSelector = GameObject.FindGameObjectWithTag("GridSelector");
+            (gridSelector.GetComponent<GridSelector>()).appear();
+            gridSelector.transform.position = new Vector3(x, y, 0);
+            (gridSelector.GetComponent<GridSelector>()).x = x;
+            (gridSelector.GetComponent<GridSelector>()).y = y;
+            (gridSelector.GetComponent<GridSelector>()).makeActive();
+            shooting = true;
+            return;
+        }
+
+        else {
+            GameObject gridSelector = GameObject.FindGameObjectWithTag("GridSelector");
+            int gridX = gridSelector.GetComponent<GridSelector>().x;
+            int gridY = gridSelector.GetComponent<GridSelector>().y;
+
+            //this stops the bullet from appearing at the moment that you press the button first time
+            if (gridX == x && gridY == y && !name.Equals("Hugo"))
+            {
+                return;
+            }
+
+            animator.ResetTrigger("FaceLeft");
+            animator.ResetTrigger("FaceRight");
+            animator.ResetTrigger("FaceUp");
+            animator.ResetTrigger("FaceDown");
+
+            if (ATB <= 0 || !(character.fireWeapon(this, gridSelector)))
+            {
+                stopShooting = true;
+                cancel(); //uncomment this to make things work i think
+                return;
+            }
+          
+            // GameObject bullet = Instantiate(greenBullet, new Vector3(x, y, 0), Quaternion.identity)
+            //     as GameObject;
+            int xDiff = gridX - x;
+            int yDiff = gridY - y;
+
+            if (Math.Abs(xDiff) > Math.Abs(yDiff))
+            {
+
+                if (xDiff > 0)
+                {
+                    setDirection(3);
+                }
+
+                else
+                {
+                    setDirection(4);
+                }
+
+            }
+            else {
+                if (yDiff > 0)
+                {
+                    setDirection(2);
+                }
+
+                else
+                {
+                    setDirection(1);
+                }
+            }
+        }
+    }
+    //z for keyboard, use to use special
+    public void rightBumper()
+    {
+        character.StartSpecial(this);
+    }
+
+    //not sure what to use this button for yet
+    public void leftTrigger()
+    {
+
+    }
+
+    //caps lock on computer, use to turn display off
+    public void leftBumper()
+    {
+
+    }
+
+    public void startButton() {
+        if (GameManager.instance.singlePlayerMove && !GameManager.instance.stopAll)
+        //you need the second of the above conditions to prevent mashed output from messing you
+        //up
+        {
+            character.wasteSpecial(this);
+            movePoints = -200;
+            LoseATB(400);
+            ATB = -200;
+            GameManager.instance.playersTurn = false;
+            GameManager.instance.singlePlayerMove = false;
+            //  GameManager.instance.singlePlayerMove = false;
+            //GameManager.instance.enemiesMoving = true;
+            //GameManager.instance.currentUnit = null; can't do this here because the loop in
+            //GameManager might in the middle of running when it happens, since parallel processes
+            isActivePlayer = false;
+            //i wanna just make a pause
+            // StartCoroutine(GameManager.instance.MoveUnits());
+            GameManager.instance.readyToDestroyPlayerTurn = true;
+            return;
+        }
+
+    }
+
+    public void menu() {
+        if (!GameManager.instance.messageBeingShown && isActivePlayer) {
+            GameManager.instance.toggleHints();
+        }
     }
 }
 /*

@@ -58,4 +58,5 @@ public class SpecialGauge : MonoBehaviour {
     public int GetSpecialValue() {
         return specialValue;
     }
+
 }

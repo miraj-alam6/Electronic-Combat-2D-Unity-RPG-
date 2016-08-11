@@ -106,7 +106,7 @@ public class GameCalculation : MonoBehaviour
                 //Debug.Log("yo");
                 if (actualGrid[i, j].hasWall || actualGrid[i, j].hasPot || actualGrid[i, j].hasPlayer)
                 {
-                    if(actualGrid[i,j].x == destX && actualGrid[i,j].y == destY)
+                    if (actualGrid[i, j].x == destX && actualGrid[i, j].y == destY)
                     {
                         pathGrid[i, j].fullOccupied = false;
                     }
@@ -119,7 +119,7 @@ public class GameCalculation : MonoBehaviour
                         pathGrid[i, j].fullOccupied = true;
                     }
                 }
-                
+
                 else if (actualGrid[i, j].hasPlayer)
                 {
                     Debug.Log("Count this up");
@@ -164,7 +164,7 @@ public class GameCalculation : MonoBehaviour
                     // }
                     //}
                 }
-                else if (actualGrid[i, j].hasEnemy)
+                else if (actualGrid[i, j].hasEnemy || actualGrid[i,j].hasPermaWall)
                 {
                     pathGrid[i, j].enemyOccupied = true;
                     

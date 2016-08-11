@@ -6,8 +6,8 @@ using Random = UnityEngine.Random;
 public class Enemy : Unit {
    
     public int playerDamage; //amount of damage inflicted onto the player
-    public int direction = 1;
-    private Animator animator;
+    public bool analyzedAlready = false;
+    //private Animator animator;
     
     private bool skipMove; //use this to make enemy move every other turn
     
@@ -96,7 +96,7 @@ public class Enemy : Unit {
 
         // int destinationX = (int) GameObject.FindGameObjectWithTag("Player").transform.position.x;
         // int destinationY = (int)GameObject.FindGameObjectWithTag("Player").transform.position.y;
-        int playerIndex = Random.Range(0,GameManager.instance.players.Count);
+        //int playerIndex = Random.Range(0,GameManager.instance.players.Count);
         //Debug.Log(playerIndex);
         int destinationX = getTargetX();
         int destinationY = getTargetY();
@@ -106,6 +106,15 @@ public class Enemy : Unit {
         movesToDo = GameManager.instance.gameCalculation.getShortestPath(x,y,destinationX,destinationY,false);
         if (movesToDo.Count <= 0 && canBreakWalls) {
             movesToDo = GameManager.instance.gameCalculation.getShortestPath(x, y, destinationX, destinationY, true);
+        }
+        if(movesToDo.Count <= 0)
+        {
+            string origName = targetName;
+            targetName = "Alejandra";
+            destinationX = getTargetX();
+            destinationY = getTargetY();
+            movesToDo = GameManager.instance.gameCalculation.getShortestPath(x, y, destinationX, destinationY, true);
+            targetName = origName;
         }
        // GameManager.instance.gameCalculation.printList(movesToDo);
       //  Debug.Log("End Think");
@@ -129,6 +138,7 @@ public class Enemy : Unit {
 
     //Game manager will call this on each enemy in our enemy list
     public void MoveEnemy() {
+        GameManager.instance.UpdateCamera();
         if (GameManager.instance.stopAll) {
             return;
         }
@@ -185,7 +195,7 @@ public class Enemy : Unit {
     protected IEnumerator DieAnimation()
     {
         yield return new WaitForSeconds(1);
-        Debug.Log("April");
+
         dead = true;
         GameManager.instance.gameCalculation.actualGrid[y, x].hasEnemy = false;
         GameManager.instance.gameCalculation.actualGrid[y, x].walkable = true;
@@ -194,10 +204,22 @@ public class Enemy : Unit {
 
     //changed this to a bool. It returns true if the enemy was killed, and false if the
     //enemy was not killed.
-    public bool LoseHP(int attack)
+    public bool LoseHP(int attack, int attackerDirection)
     {
-     
-        HP -= (attack - defense);
+
+        float multiplier = 1.0f;
+
+        if (checkIfBackAttack(attackerDirection, direction))
+        {
+            multiplier = 1.4f;
+        }
+
+        int damage = ((int)(multiplier * attack) - defense);
+        if (damage < 0)
+        {
+            damage = 0;
+        }
+        HP -= damage;
         if (HP <= 0) {
             HP = 0;
             ATB = 0;
@@ -264,7 +286,9 @@ public class Enemy : Unit {
             {
                 animator.SetTrigger("AttackLeft");
             }
-            hitPlayer.LoseHP(attack);
+            hitPlayer.LoseHP(attack, direction);
         }
     }
+
+
 }

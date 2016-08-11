@@ -18,8 +18,14 @@ public class Collectible : MonoBehaviour {
                 Debug.Log("You have a total of "+ GameManager.instance.gameData.batteryBoxCount + " battery box.");
                 break;
             case "Chicken":
-                message = "You got" + quantity + "\nchicken flower.";
+                message = "You got " + quantity + " chicken flower.";
+                if (GameManager.instance.currentLevel is TutorialLevel9) {
+                    message += ("You have a total of "+ 
+                        (((TutorialLevel9)GameManager.instance.currentLevel).chickens + quantity) + 
+                        " chicken flowers.");
+                }
                 Debug.Log("You got a chicken flower.");
+                GameManager.instance.currentLevel.updateLevel("got_chicken");
                 break;
             case "Burger":
                 message = "You got " + quantity + "\nburger.";
@@ -29,7 +35,7 @@ public class Collectible : MonoBehaviour {
                 break;
 
         }
-        GameManager.instance.RightUI.GetComponent<MessageUI>().SetMessage(message);
+        GameManager.instance.showMessage(message);
         gameObject.SetActive(false);
     }
 }

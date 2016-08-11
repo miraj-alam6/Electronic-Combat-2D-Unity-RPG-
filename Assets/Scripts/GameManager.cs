@@ -2,7 +2,10 @@
 using System.Collections;
 using System.Collections.Generic; //so we can use lists to keep track of enemies
 using UnityEngine.UI;
+
+
 public class GameManager : MonoBehaviour {
+    public InfoUI actualInfo;
     public float levelStartDelay = 2f; //in seconds
     public float levelDoneDelay = 1f;
     public float turnDelay = 0.1f; //how long game waits between turns
@@ -17,7 +20,8 @@ public class GameManager : MonoBehaviour {
     private Text levelText;
     private GameObject levelImage; //gonna activate and deactivate as need
     public bool doingSetup; //to check if we're setting up the board to prevent player from moving
-
+    public bool hintsOn = true;
+    public int currentDeathsForLevel = 0;
     public int level = 8; //starting at 7 for testing because that's where enemy appears.
     private List<Enemy> enemies;
     public List<Player> players; //list of all the player units
@@ -35,7 +39,10 @@ public class GameManager : MonoBehaviour {
     public Data gameData; //not set in inspector
     public GameObject LeftUI; //set in inspector
     public GameObject RightUI;//set in inspector
-    public MessageUI messageUI;
+    public GameObject MiddleUI;
+    public InfoUI infoUI;
+    public CameraController mainCamera; // set in inspector for each map
+    public bool messageBeingShown;
     private void OnLevelWasLoaded(int index)
     {
 
@@ -74,65 +81,118 @@ public class GameManager : MonoBehaviour {
         InitGame();
     }
 
+
+    public void UpdateCamera() {
+        if (mainCamera) {
+            if (currentUnit) { //forgot about this check
+                if (currentUnit is Player && ((Player)currentUnit).shooting)
+                {
+                    GridSelector gridSelector =
+                    GameObject.FindGameObjectWithTag("GridSelector").GetComponent<GridSelector>();
+                    mainCamera.Move(gridSelector.x, gridSelector.y);
+                }
+                else
+                {  
+                    //Debug.Log("Reached eventually");
+                    //Debug.Log(currentUnit.x +"  "+currentUnit.y);
+                    mainCamera.Move(currentUnit.x, currentUnit.y);
+                }
+            }
+        }
+    }
+
+    public void showMessage(string message) {
+        stopAll = true;
+        messageBeingShown = true;
+        MiddleUI.SetActive(true);
+        MiddleUI.GetComponent<MessageUI>().SetMessage(message);
+    }
+
+    //side effect of this function is that stopAll will become false, may not always intend this.
+    public void hideMessage() {
+        stopAll = false;
+        messageBeingShown = false;
+        MiddleUI.SetActive(false);
+    }
     //gonna use BoardManager's setup scene function
     void InitGame() {
+
+        MiddleUI.SetActive(false);
+        actualInfo = GameManager.instance.RightUI.GetComponent<InfoUI>();
         enemies = new List<Enemy>();
         players = new List<Player>();
         units = new List<Unit>();
         playersTurn = false;
         singlePlayerMove = false;
-        messageUI = RightUI.GetComponent<MessageUI>();
+        infoUI = RightUI.GetComponent<InfoUI>();
         doingSetup = true;
         if (Application.loadedLevelName.Equals("_Scenes/Tutorial1") || Application.loadedLevelName.Equals("Tutorial1"))
         {
-            currentLevel = new TutorialLevel1();
-            Debug.Log(currentLevel);
-            messageUI.SetActualObjective("Break all\npots.");
+            currentLevel = new TutorialLevel1(currentDeathsForLevel);
+            //Debug.Log(currentLevel);
+            infoUI.SetActualObjective("Break all\npots.");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial2") || Application.loadedLevelName.Equals("Tutorial2"))
         {
-            currentLevel = new TutorialLevel2();
-            Debug.Log(currentLevel);
-            messageUI.SetActualObjective("Defeat the\nenemy");
+            currentLevel = new TutorialLevel2(currentDeathsForLevel);
+            //Debug.Log(currentLevel);
+            infoUI.SetActualObjective("Defeat the\nenemy");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial3") || Application.loadedLevelName.Equals("Tutorial3"))
         {
-            currentLevel = new TutorialLevel3();
-            Debug.Log(currentLevel);
-            messageUI.SetActualObjective("Defeat both\nenemies");
+            currentLevel = new TutorialLevel3(currentDeathsForLevel);
+            //Debug.Log(currentLevel);
+            infoUI.SetActualObjective("Defeat both\nenemies");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial4") || Application.loadedLevelName.Equals("Tutorial4"))
         {
-            currentLevel = new TutorialLevel4();
-            Debug.Log(currentLevel);
-            messageUI.SetActualObjective("Defeat all\nenemies");
+            currentLevel = new TutorialLevel4(currentDeathsForLevel);
+            //Debug.Log(currentLevel);
+            infoUI.SetActualObjective("Defeat all\nenemies");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial5") || Application.loadedLevelName.Equals("Tutorial5"))
         {
-            currentLevel = new TutorialLevel5();
+            currentLevel = new TutorialLevel5(currentDeathsForLevel);
             Debug.Log(currentLevel);
-            messageUI.SetActualObjective("Defeat all\nenemies");
+            infoUI.SetActualObjective("Defeat all\nenemies");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial6") || Application.loadedLevelName.Equals("Tutorial6"))
         {
-            currentLevel = new TutorialLevel6();
+            currentLevel = new TutorialLevel6(currentDeathsForLevel);
             Debug.Log(currentLevel);
-            messageUI.SetActualObjective("Defeat all\nenemies");
+            Debug.Log(infoUI);
+            infoUI.SetActualObjective("Defeat all\nenemies");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial7") || Application.loadedLevelName.Equals("Tutorial7"))
         {
-            currentLevel = new TutorialLevel7();
+
+            currentLevel = new TutorialLevel7(currentDeathsForLevel);
             Debug.Log(currentLevel);
-            messageUI.SetActualObjective("Defeat all\nenemies");
+            infoUI.SetActualObjective("Defeat all\nenemies");
         }
-        Debug.Log("Do we ever Init again?");
-        Debug.Log(Application.loadedLevelName);
+
+        else if (Application.loadedLevelName.Equals("_Scenes/Tutorial8") || Application.loadedLevelName.Equals("Tutorial8"))
+        {
+            currentLevel = new TutorialLevel8(currentDeathsForLevel);
+            Debug.Log(currentLevel);
+            infoUI.SetActualObjective("Defeat all\nenemies");
+        }
+        else if (Application.loadedLevelName.Equals("_Scenes/Tutorial9") || Application.loadedLevelName.Equals("Tutorial9"))
+        {
+            currentLevel = new TutorialLevel9(currentDeathsForLevel);
+            Debug.Log(currentLevel);
+            infoUI.SetActualObjective("Collect "+ ((TutorialLevel9)currentLevel).goalChickens+ "\nChicken Flowers");
+        }
+
+        currentLevel.retainHintsSetting(hintsOn);
+       // Debug.Log("Do we ever Init again?");
+       // Debug.Log(Application.loadedLevelName);
 
 
         //NOTE: comment/uncomment this if you don't want/want level image again
         levelImage = GameObject.Find("LevelImage");//here we are finding by name, make sure same name in editor
         levelText = GameObject.Find("LevelText").GetComponent<Text>();
-        levelText.text = "Day " + level;
+        levelText.text = "Mission " + level;
         levelImage.SetActive(true);
 
         Invoke("HideLevelImage", levelStartDelay); //Use Invoke to wait before invoking a function
@@ -158,9 +218,17 @@ public class GameManager : MonoBehaviour {
         doingSetup = false; //player can now move
         stopAll = false;
         inputHelper = false;
-
+        stuffAfterLoading();
     }
 
+    public void stuffAfterLoading() {
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
+        //Debug.Log("F do you know about my pain");
+        //Debug.Log(GameObject.FindGameObjectWithTag("MainCamera"));
+        //Debug.Log(mainCamera);
+        UpdateCamera();
+
+    }
     // Update is called once per frame
     void Update() {
 
@@ -214,6 +282,9 @@ public class GameManager : MonoBehaviour {
     //This function will be used by enemies to register themselves into the game manager
     public void AddPlayerToList(Player script)
     {
+        if (currentLevel is TutorialLevel6) {
+            script.weInTutorialLevel6 = true;
+        }
         players.Add(script); // put it into the list of players
         units.Add(script); // as well as all the units that are in the game
     }
@@ -226,7 +297,23 @@ public class GameManager : MonoBehaviour {
                          // GameManager.instance.currentLevel.updateLevel("restart");
 
     }
+    public void toggleHints() {
+        
+        if (hintsOn)
+        {
+            hintsOn = false;
+            currentLevel.hintsOn = false;
+            showMessage("Hints have been turned OFF");
+        }
+        else
+        {
 
+            hintsOn = true;
+            currentLevel.hintsOn = true;
+            showMessage("Hints have been turned ON");
+
+        }
+    }
 
     //Now a coroutine to move our the current active unit
     //Will be used in update
@@ -256,6 +343,7 @@ public class GameManager : MonoBehaviour {
             if (currentUnit.movePoints == -200 || currentUnit.ATB == -200)
             {
                 yield return new WaitForSeconds(turnDelay); //one more delay between turns so triggers don't get messed up by player input
+                
             }
             yield break;
 
@@ -318,13 +406,14 @@ public class GameManager : MonoBehaviour {
             if (units[i].ATB >= 100 /*|| (units[i].isPlayer &&((Player)units[i]).isActivePlayer )*/) {
                 //if it's someone turn now, just wait before making him active to escape any user
                 //input glitch
-              
+                addATurn();      
                 currentUnit = units[i];
+                UpdateCamera();
                 currentUnit.flashWhite(0.1f);
                // currentUnit.ATB = 100; //moved this to ApplySpeed
                 if (currentUnit.isPlayer)
                 {
-                    RightUI.GetComponent<MessageUI>().SetTurnMessage("Player Turn");
+                    RightUI.GetComponent<InfoUI>().SetTurnMessage("Player Turn");
                     playersTurn = true;
                     // singlePlayerMove = true; //might need this
                     ((Player)currentUnit).isActivePlayer = true;
@@ -332,7 +421,7 @@ public class GameManager : MonoBehaviour {
                     ((Player)currentUnit).updateText();
                 }
                 else {
-                    RightUI.GetComponent<MessageUI>().SetTurnMessage("Enemy Turn");
+                    RightUI.GetComponent<InfoUI>().SetTurnMessage("Enemy Turn");
                     ((Enemy)currentUnit).Think();
                 }
                 return;
@@ -347,18 +436,23 @@ public class GameManager : MonoBehaviour {
         
     }
 
+    public void addATurn() {
+        currentLevel.incrementTurnCount();
+    }
     public void playerDone() {
 
     }
 
     public void GonnaRestartLevel()
     {
+        currentDeathsForLevel++;
         GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliHP(1, 1);
         GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliATB(100, 0);
         Invoke("RestartLevel", levelDoneDelay);
     }
 
     public void DoneWithLevel() {
+        currentDeathsForLevel = 0;
         GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliHP(1, 1);
         GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliATB(100, 0);
         level++;
@@ -407,6 +501,16 @@ public class GameManager : MonoBehaviour {
             //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
             Application.LoadLevel("_Scenes/Tutorial7");
         }
+        else if (currentLevel is TutorialLevel8)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial8");
+        }
+        else if (currentLevel is TutorialLevel9)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial9");
+        }
     }
 
 
@@ -449,7 +553,57 @@ public class GameManager : MonoBehaviour {
         else if (currentLevel is TutorialLevel7)
         {
             //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
-            Application.LoadLevel("_Scenes/Tutorial7");
+            Application.LoadLevel("_Scenes/Tutorial8");
         }
+        else if (currentLevel is TutorialLevel8)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial9");
+        }
+        else if (currentLevel is TutorialLevel9)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial9");
+        }
+    }
+
+    public void RefreshMessage() {
+        if (currentLevel is TutorialLevel1)
+        {
+            infoUI.SetMessage("This space\nain't used\nuntil mission 6");
+        }
+        else if (currentLevel is TutorialLevel2)
+        {
+            infoUI.SetMessage("Don't Lose");
+        }
+        else if (currentLevel is TutorialLevel3)
+        {
+            infoUI.SetMessage("Obama is\na lizard");
+        }
+        else if (currentLevel is TutorialLevel4)
+        {
+            infoUI.SetMessage("Hilary is\na snake");
+        }
+        else if (currentLevel is TutorialLevel5)
+        {
+            infoUI.SetMessage("Remember how\nto shoot");
+        }
+        else if (currentLevel is TutorialLevel6)
+        {
+            infoUI.SetMessage("Winoa can\n heal.");
+        }
+        else if (currentLevel is TutorialLevel7)
+        {
+            infoUI.SetMessage("Intel can\n help a great\ndeal.");
+        }
+        else if (currentLevel is TutorialLevel8)
+        {
+            infoUI.SetMessage("Be brave\nlike Caitlyn.");
+        }
+        else if (currentLevel is TutorialLevel9)
+        {
+            infoUI.SetMessage("Insert\nmessage\nhere");
+        }
+
     }
 }

@@ -9,7 +9,7 @@ TextureImporter:
     21300004: Pot_Break_2
     21300006: Pot_Break_3
     21300008: Battery_Pack
-    21300010: Scavengers_SpriteSheet_5
+    21300010: Chicken_Flower
     21300012: Scavengers_SpriteSheet_6
     21300014: Scavengers_SpriteSheet_7
     21300016: Scavengers_SpriteSheet_8
@@ -66,6 +66,7 @@ TextureImporter:
     21300118: Scavengers_SpriteSheet_3
     21300120: Scavengers_SpriteSheet_4
     21300122: Battery_Box
+    21300124: Scavengers_SpriteSheet_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -230,7 +231,7 @@ TextureImporter:
         - {x: 12, y: -16}
         - {x: 12, y: -8}
         - {x: 10, y: -2}
-    - name: Scavengers_SpriteSheet_5
+    - name: Chicken_Flower
       rect:
         serializedVersion: 2
         x: 160
@@ -240,7 +241,16 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
+      outline:
+      - - {x: 3, y: 16}
+        - {x: -6, y: 13}
+        - {x: -10, y: 7}
+        - {x: -11, y: 2}
+        - {x: -11, y: -14}
+        - {x: -9, y: -16}
+        - {x: 12, y: -16}
+        - {x: 12, y: 14}
+        - {x: 10, y: 16}
     - name: Scavengers_SpriteSheet_6
       rect:
         serializedVersion: 2

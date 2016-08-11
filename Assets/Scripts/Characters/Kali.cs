@@ -39,7 +39,6 @@ public class Kali : Character {
     //pass in the unit script that did the special attack so you can make the unit change color
     public override bool StartSpecial(Unit self)
     {
-        Debug.Log("This is also polymorphism, bitch");
         int specialValue = self.specialGauge.GetSpecialValue();
         int ATB = self.ATB; 
 
@@ -50,10 +49,10 @@ public class Kali : Character {
         switch (currentSpecial) {
             case "halt":
                  Debug.Log("halt is reached");
-                if (specialValue >= 100)
+                if (specialValue >= 80)
                 {
                     Debug.Log("halt worked");
-                    self.turnBlue();
+                    self.turnCyan();
                     startedSpecial = true;
                     returnVal = true;
                 }
@@ -62,7 +61,7 @@ public class Kali : Character {
                 }
                 //the following invocation works for both the case where it actually works, and
                 //when it doesn't
-                self.specialGauge.ReduceSpecialValue(100);
+                self.specialGauge.ReduceSpecialValue(80);
                 break;
                 
             case "charge":
@@ -86,12 +85,12 @@ public class Kali : Character {
     //Pass in whoever the target of your special is AKA the unit you may attack or heal
     public override void CheckIfExecuteSpecial(Unit self, Unit target)
     {
-        Debug.Log("Polymorphism bitch");
+
         if (startedSpecial) {
             
             switch (currentSpecial) {
                 case "halt":
-                    if (target is Enemy) {
+                    if (target is Unit) {
                         target.LoseATB(100);
                     }
                     break;

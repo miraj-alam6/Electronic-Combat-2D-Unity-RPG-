@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
     bool bulletBurst = false;
     public float burstTime = 0.1f;
     private Animator animator;
-
+    int direction = 1;
     // Use this for initialization
     void Start()
     {
@@ -46,7 +46,7 @@ public class Bullet : MonoBehaviour
                 {
                     return;
                 }
-                other.GetComponent<Player>().LoseHP(bulletDamage);
+                other.GetComponent<Player>().LoseHP(bulletDamage,direction);
             }
         }
         else if (other.tag == "Bullet") {
@@ -81,7 +81,7 @@ public class Bullet : MonoBehaviour
             if (other.GetComponent<Enemy>())
             {
                 Debug.Log(bulletDamage);
-                other.GetComponent<Enemy>().LoseHP(bulletDamage);
+                other.GetComponent<Enemy>().LoseHP(bulletDamage,direction);
             }
         }
         bulletBurst = true;
@@ -110,18 +110,22 @@ public class Bullet : MonoBehaviour
         {
             if (diffX > 0 && diffY > 0)
             {
+                direction = 5;
                 animator.SetTrigger("UpRight");
             }
             else if (diffX > 0 && diffY < 0)
             {
+                direction = 7;
                 animator.SetTrigger("DownRight");
             }
             else if (diffX < 0 && diffY > 0)
             {
+                direction = 6;
                 animator.SetTrigger("UpLeft");
             }
             else
             {
+                direction = 8;
                 animator.SetTrigger("DownLeft");
             }
         }
@@ -130,20 +134,24 @@ public class Bullet : MonoBehaviour
             {
                 if (diffY > 0)
                 {
+                    direction = 2;
                     animator.SetTrigger("Up");
                 }
                 else
                 {
+                    direction = 1;
                     animator.SetTrigger("Down");
                 }
             }
             else {
                 if (diffX > 0)
                 {
+                    direction = 3;
                     animator.SetTrigger("Right");
                 }
                 else
                 {
+                    direction = 4;
                     animator.SetTrigger("Left");
                 }
             }
