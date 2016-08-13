@@ -41,10 +41,68 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
     public int specialGainRate;
     public Material originalMaterial;
     public Animator animator;
+
+    //all stats in different difficulties
+    public int EasyMaxHP;
+    public int EasyAttack;
+    public int EasyDefense;
+    public int EasyMinSpeed;
+    public int EasyMaxSpeed;
+    public int EasyATGCost;
+    public int NormalMaxHP;
+    public int NormalAttack;
+    public int NormalDefense;
+    public int NormalMinSpeed;
+    public int NormalMaxSpeed;
+    public int NormalATGCost;
+    public int HardMaxHP;
+    public int HardAttack;
+    public int HardDefense;
+    public int HardMinSpeed;
+    public int HardMaxSpeed;
+    public int HardATGCost;
     //flashMaterial is set in inspector, it is the font material
     public Material flashMaterial;
 
     protected virtual void Start () { //protected virtual can be overridden by inherting classes
+        //set up all the stats for enemies based on what difficulty the game is
+        if (!isPlayer) {
+            //Easy difficulty
+            if (GameManager.instance.difficultyLevel <= 0)
+            {
+                MaxHP = EasyMaxHP;
+                attack = EasyAttack;
+                defense = EasyDefense;
+                minSpeed = EasyMinSpeed;
+                maxSpeed = EasyMaxSpeed;
+                ATBCost = EasyATGCost;
+            }
+
+            //Normal difficulty
+            else if (GameManager.instance.difficultyLevel == 1)
+            {
+                MaxHP = NormalMaxHP;
+                attack = NormalAttack;
+                defense = NormalDefense;
+                minSpeed = NormalMinSpeed;
+                maxSpeed = NormalMaxSpeed;
+                ATBCost = NormalATGCost;
+
+            }
+            //Hard difficulty
+            else {
+                MaxHP = HardMaxHP;
+                attack = HardAttack;
+                defense = HardDefense;
+                minSpeed = HardMinSpeed;
+                maxSpeed = HardMaxSpeed;
+                ATBCost = HardATGCost;
+
+            }
+
+        }
+
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
         originalMaterial = spriteRenderer.material;
@@ -75,6 +133,9 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
         return (attackerDirection == victimDirection);
     }
     public void flashWhite(float time) {
+        if (GameManager.instance.noMoreLevelOnNextLoad || GameManager.instance.inMenuScreen) {
+            return;
+        }
         spriteRenderer.material = flashMaterial;
         spriteRenderer.color = Color.white;
         Invoke("becomeNormal",time);
@@ -100,6 +161,16 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
     public void turnYellow()
     {
         spriteRenderer.color = Color.yellow;
+    }
+
+
+    //This is to fix some weird glitch where there were two active players at a time sometimes.
+    public void safeGuardForActivePlayer() {
+        if (this is Player) {
+            //Debug.Log("Reached here  brahhh");
+            ((Player)this).isActivePlayer = false;
+                    
+        }
     }
     public void becomeNormal() {
         spriteRenderer.material = originalMaterial;
@@ -265,6 +336,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
     //Fill up ATB gauge with your speed
     // NOTE: once ATB > 100 you get a baseline special boost
     public void applySpeed() {
+        safeGuardForActivePlayer();
         if (ATB <= 0) {
             ATB = 0;
         }

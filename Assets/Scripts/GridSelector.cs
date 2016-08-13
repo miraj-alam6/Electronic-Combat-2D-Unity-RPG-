@@ -44,6 +44,9 @@ public class GridSelector : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (isActive){
+            if (GameManager.instance.popUpMenuBeingShown || GameManager.instance.messageBeingShown) {
+                return;
+            }
             if (noSelector) {
                 isActive = false;
                 GetComponent<Transform>().position = new Vector2(-100, -100);

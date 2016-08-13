@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 
 public class GameManager : MonoBehaviour {
+    public bool inMenuScreen = false;
+    public bool noMoreMenuOnNextLoad = false;
+    public bool noMoreLevelOnNextLoad = false;
     public InfoUI actualInfo;
     public float levelStartDelay = 2f; //in seconds
     public float levelDoneDelay = 1f;
@@ -22,7 +25,7 @@ public class GameManager : MonoBehaviour {
     public bool doingSetup; //to check if we're setting up the board to prevent player from moving
     public bool hintsOn = true;
     public int currentDeathsForLevel = 0;
-    public int level = 8; //starting at 7 for testing because that's where enemy appears.
+    public int levelNumber = 8; //starting at 7 for testing because that's where enemy appears.
     private List<Enemy> enemies;
     public List<Player> players; //list of all the player units
     public List<Unit> units; // list of all units: both players and enemies
@@ -40,24 +43,45 @@ public class GameManager : MonoBehaviour {
     public GameObject LeftUI; //set in inspector
     public GameObject RightUI;//set in inspector
     public GameObject MiddleUI;
+    public GameObject PopUpMenu;
     public InfoUI infoUI;
     public CameraController mainCamera; // set in inspector for each map
     public bool messageBeingShown;
+    public int difficultyLevel; //0 is easy, 1 is normal, 2 is hard
+    public string whichMenu = "level_done";
+    public bool popUpMenuBeingShown = false;
     private void OnLevelWasLoaded(int index)
     {
-
+        
+        if (noMoreLevelOnNextLoad)
+        {
+            inMenuScreen = true;
+            PopUpMenu.SetActive(false);
+            LeftUI.SetActive(false);
+            RightUI.SetActive(false);
+            MiddleUI.SetActive(false);
+            noMoreLevelOnNextLoad = false;
+        }
+        else if (noMoreMenuOnNextLoad) {
+            inMenuScreen = false;
+            PopUpMenu.SetActive(false);
+            LeftUI.SetActive(true);
+            RightUI.SetActive(true);
+            noMoreMenuOnNextLoad = false;
+        }
         InitGame();//initgame will manage our UI and manage the stuff
 
     }
     //use this in future when you move away the stuff from OnLevelWasLoaded cause apprantly that's
     //a problem in mobile device
     public void RestartStuff() {
-        level++;
+        //level++;
         InitGame();//initgame will manage our UI and manage the stuff
     }
     // Use this for initialization
     //changed start to awake
     void Awake() {
+        PopUpMenu.SetActive(false);
         gameData = new Data();
         if (instance == null) {
             instance = this;
@@ -102,6 +126,9 @@ public class GameManager : MonoBehaviour {
     }
 
     public void showMessage(string message) {
+        if (noMoreLevelOnNextLoad || inMenuScreen) {
+            return;
+        }
         stopAll = true;
         messageBeingShown = true;
         MiddleUI.SetActive(true);
@@ -116,7 +143,12 @@ public class GameManager : MonoBehaviour {
     }
     //gonna use BoardManager's setup scene function
     void InitGame() {
-
+        if (inMenuScreen) {
+            MiddleUI.SetActive(false);
+            LeftUI.SetActive(false);
+            RightUI.SetActive(false);
+            return;
+        }
         MiddleUI.SetActive(false);
         actualInfo = GameManager.instance.RightUI.GetComponent<InfoUI>();
         enemies = new List<Enemy>();
@@ -128,36 +160,42 @@ public class GameManager : MonoBehaviour {
         doingSetup = true;
         if (Application.loadedLevelName.Equals("_Scenes/Tutorial1") || Application.loadedLevelName.Equals("Tutorial1"))
         {
+            levelNumber = 1;
             currentLevel = new TutorialLevel1(currentDeathsForLevel);
             //Debug.Log(currentLevel);
             infoUI.SetActualObjective("Break all\npots.");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial2") || Application.loadedLevelName.Equals("Tutorial2"))
         {
+            levelNumber = 2;
             currentLevel = new TutorialLevel2(currentDeathsForLevel);
             //Debug.Log(currentLevel);
             infoUI.SetActualObjective("Defeat the\nenemy");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial3") || Application.loadedLevelName.Equals("Tutorial3"))
         {
+            levelNumber = 3;
             currentLevel = new TutorialLevel3(currentDeathsForLevel);
             //Debug.Log(currentLevel);
             infoUI.SetActualObjective("Defeat both\nenemies");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial4") || Application.loadedLevelName.Equals("Tutorial4"))
         {
+            levelNumber = 4;
             currentLevel = new TutorialLevel4(currentDeathsForLevel);
             //Debug.Log(currentLevel);
             infoUI.SetActualObjective("Defeat all\nenemies");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial5") || Application.loadedLevelName.Equals("Tutorial5"))
         {
+            levelNumber = 5;
             currentLevel = new TutorialLevel5(currentDeathsForLevel);
             Debug.Log(currentLevel);
             infoUI.SetActualObjective("Defeat all\nenemies");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial6") || Application.loadedLevelName.Equals("Tutorial6"))
         {
+            levelNumber = 6;
             currentLevel = new TutorialLevel6(currentDeathsForLevel);
             Debug.Log(currentLevel);
             Debug.Log(infoUI);
@@ -165,7 +203,7 @@ public class GameManager : MonoBehaviour {
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial7") || Application.loadedLevelName.Equals("Tutorial7"))
         {
-
+            levelNumber = 7;
             currentLevel = new TutorialLevel7(currentDeathsForLevel);
             Debug.Log(currentLevel);
             infoUI.SetActualObjective("Defeat all\nenemies");
@@ -173,26 +211,29 @@ public class GameManager : MonoBehaviour {
 
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial8") || Application.loadedLevelName.Equals("Tutorial8"))
         {
+            levelNumber = 8;
             currentLevel = new TutorialLevel8(currentDeathsForLevel);
             Debug.Log(currentLevel);
             infoUI.SetActualObjective("Defeat all\nenemies");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial9") || Application.loadedLevelName.Equals("Tutorial9"))
         {
+            levelNumber = 9;
             currentLevel = new TutorialLevel9(currentDeathsForLevel);
             Debug.Log(currentLevel);
             infoUI.SetActualObjective("Collect "+ ((TutorialLevel9)currentLevel).goalChickens+ "\nChicken Flowers");
         }
-
+        if (currentLevel !=  null) { 
         currentLevel.retainHintsSetting(hintsOn);
-       // Debug.Log("Do we ever Init again?");
-       // Debug.Log(Application.loadedLevelName);
+        }
+        // Debug.Log("Do we ever Init again?");
+        // Debug.Log(Application.loadedLevelName);
 
 
         //NOTE: comment/uncomment this if you don't want/want level image again
         levelImage = GameObject.Find("LevelImage");//here we are finding by name, make sure same name in editor
         levelText = GameObject.Find("LevelText").GetComponent<Text>();
-        levelText.text = "Mission " + level;
+        levelText.text = "Mission " + levelNumber;
         levelImage.SetActive(true);
 
         Invoke("HideLevelImage", levelStartDelay); //Use Invoke to wait before invoking a function
@@ -200,7 +241,7 @@ public class GameManager : MonoBehaviour {
         //so instead i do it in HideLevelImage, because it will be delayed
         //        stopAll = false;
         enemies.Clear(); //API function, need to do this when starting a new level
-        boardScript.SetupScene(level);
+        boardScript.SetupScene(levelNumber);
         //Without the next line game doesn't let you move anymore and is frozen if you end the
         //level with your last move
         // playersTurn = true;
@@ -290,7 +331,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void GameOver() {
-        levelText.text = "Survived for " + level + " days.";
+        levelText.text = "Survived for " + levelNumber + " days.";
         levelImage.SetActive(true);
         enabled = false; //disables the game manager
                          //Invoke("RestartLevel",1);
@@ -385,7 +426,7 @@ public class GameManager : MonoBehaviour {
     }
     public void ApplySpeed()
     {
-        if (doingSetup || stopAll) {
+        if (doingSetup || stopAll || noMoreLevelOnNextLoad || inMenuScreen) {
             return;
         }
         //First check if there is already a currentunit, if so don't apply speed
@@ -452,13 +493,22 @@ public class GameManager : MonoBehaviour {
     }
 
     public void DoneWithLevel() {
+      
         currentDeathsForLevel = 0;
         GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliHP(1, 1);
         GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliATB(100, 0);
-        level++;
-        Invoke("LoadNextLevel", levelDoneDelay);
+        if (levelNumber == 3) {
+            Destroy(SoundManager.instance.gameObject);
+        }
+        levelNumber++;
+//        Invoke("LoadNextLevel", levelDoneDelay);
+        Invoke("GoToEndLevelScreen", levelDoneDelay);
     }
-
+    public void GoToEndLevelScreen() {
+        noMoreLevelOnNextLoad = true;
+        whichMenu = "level_done";
+        Application.LoadLevel("_Scenes/Menu");
+    }
     public void RestartLevel()
     {
        
@@ -513,7 +563,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-
+    
     //Once the level is complete go to the next level
     public void LoadNextLevel()
     {
@@ -566,7 +616,45 @@ public class GameManager : MonoBehaviour {
             Application.LoadLevel("_Scenes/Tutorial9");
         }
     }
+    public void setLevelNumber(int n) {
+        levelNumber = n;
+    }
+    public void levelNumberIncrement()
+    {
+        levelNumber++;
+    }
 
+    public void LoadLevelByNumber(int lvlNumber) {
+        switch (lvlNumber) {
+            case 1:
+                Application.LoadLevel("_Scenes/Tutorial1");
+                break;
+            case 2:
+                Application.LoadLevel("_Scenes/Tutorial2");
+                break;
+            case 3:
+                Application.LoadLevel("_Scenes/Tutorial3");
+                break;
+            case 4:
+                Application.LoadLevel("_Scenes/Tutorial4");
+                break;
+            case 5:
+                Application.LoadLevel("_Scenes/Tutorial5");
+                break;
+            case 6:
+                Application.LoadLevel("_Scenes/Tutorial6");
+                break;
+            case 7:
+                Application.LoadLevel("_Scenes/Tutorial7");
+                break;
+            case 8:
+                Application.LoadLevel("_Scenes/Tutorial8");
+                break;
+            case 9:
+                Application.LoadLevel("_Scenes/Tutorial9");
+                break;
+        }
+    }
     public void RefreshMessage() {
         if (currentLevel is TutorialLevel1)
         {
@@ -604,6 +692,19 @@ public class GameManager : MonoBehaviour {
         {
             infoUI.SetMessage("Insert\nmessage\nhere");
         }
+
+    }
+
+
+    public void goBackToTitleScreen()
+    {
+        noMoreLevelOnNextLoad = true;
+        GameManager.instance.whichMenu = "title";
+        if (SoundManager.instance) { 
+        Destroy(SoundManager.instance.gameObject);
+        }
+        Application.LoadLevel("_Scenes/TitleScreen");
+
 
     }
 }

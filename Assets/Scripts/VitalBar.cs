@@ -22,8 +22,9 @@ public class VitalBar : MonoBehaviour {
 
     //Call this whenever you change health
     public void UpdateVitalBar(int maxVal, int currVal) {
-       // Debug.Log(transform.rect.width);
-       // Debug.Log("vat");
+        // Debug.Log(transform.rect.width);
+        // Debug.Log("vat");
+
         transform.localScale = new Vector3((float)currVal/maxVal,1.0f,1.0f);
         //Debug.Log(transform.rect.width);
     }

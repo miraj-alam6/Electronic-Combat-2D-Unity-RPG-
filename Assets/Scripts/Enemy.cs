@@ -116,8 +116,27 @@ public class Enemy : Unit {
             movesToDo = GameManager.instance.gameCalculation.getShortestPath(x, y, destinationX, destinationY, true);
             targetName = origName;
         }
-       // GameManager.instance.gameCalculation.printList(movesToDo);
-      //  Debug.Log("End Think");
+        if (movesToDo.Count <= 0)
+        {
+            string origName = targetName;
+            targetName = "Hugo";
+            destinationX = getTargetX();
+            destinationY = getTargetY();
+            movesToDo = GameManager.instance.gameCalculation.getShortestPath(x, y, destinationX, destinationY, true);
+            targetName = origName;
+        }
+        if (movesToDo.Count <= 0)
+        {
+
+            string origName = targetName;
+            targetName = "Winoa";
+            destinationX = getTargetX();
+            destinationY = getTargetY();
+            movesToDo = GameManager.instance.gameCalculation.getShortestPath(x, y, destinationX, destinationY, true);
+            targetName = origName;
+        }
+        // GameManager.instance.gameCalculation.printList(movesToDo);
+        //  Debug.Log("End Think");
     }
     //T is the player for this class
     protected override void AttemptMove<T>(int xDir, int yDir)

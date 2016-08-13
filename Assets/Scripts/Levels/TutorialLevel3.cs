@@ -38,7 +38,7 @@ public class TutorialLevel3 : Level {
             }
 
             if (turnCount == 4) {
-                GameManager.instance.showMessage("When aiming, press tab again to shoot. You can only shoot if you have enough special, which is the number next to your vitals. ATB must also be greater than 0.");
+                GameManager.instance.showMessage("When aiming, press tab again to shoot. Bullets are stronger than melee. You can only shoot if you have enough special, it is the number next to your vitals. ATB must also be greater than 0.");
             }
             if (turnCount == 5)
             {

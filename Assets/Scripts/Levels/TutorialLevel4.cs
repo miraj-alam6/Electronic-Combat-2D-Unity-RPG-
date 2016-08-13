@@ -36,14 +36,18 @@ public class TutorialLevel4 : Level {
             }
             if (turnCount == 2)
             {
-                GameManager.instance.showMessage("NOTE ABOUT HINTS: If you want to turn off hints and tutorial messages, press backspace when it is your turn and you are not reading a message. If you reach a new level and need to see hints again, press backspace on your first turn. ");
+                GameManager.instance.showMessage("NOTE ABOUT HINTS: If you want to turn off hints and tutorial messages, press escape to open the menu. However, keep messages on if you don't know controls");
             }
             if (turnCount == 3) {
                 GameManager.instance.showMessage("If this is your first time playing, tutorial messages will teach you how to play, but if you get tired of reading the same messages because you keep dying and restarting the same stage, you can turn off hints, and then turn it back on, on your first turn in a new stage.");
             }
             if (turnCount == 4)
             {
-                GameManager.instance.showMessage("However, if you die MANY times in the same stage. Turn hints back on, and you will probably get actual hints to beating the level.");
+                GameManager.instance.showMessage("However, if you die MANY times in the same stage. Turn hints back on, and you may get a clue on how to beat the level.");
+            }
+            if (turnCount == 5)
+            {
+                GameManager.instance.showMessage("You can use the menu to quit the level and change the difficulty, and then you can retry the level.");
             }
             if (deathCount > 5 && turnCount == 2)
             {

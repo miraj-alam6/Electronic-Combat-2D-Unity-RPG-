@@ -12,7 +12,8 @@ public class Player : Unit {
     public int pointsPerSoda = 20;
     public int bulletCost;
     public bool inputCoolDown = false;
-    
+    public bool popUpMenuBeingShown = false;
+
     public int inputCoolDownCounter = 0;
     
     [HideInInspector]public bool shooting = false;
@@ -464,7 +465,8 @@ public class Player : Unit {
     {
         
         if (ATB <= 0 || !isActivePlayer ||  !GameManager.instance.singlePlayerMove || !GameManager.instance.playersTurn
-            || GameManager.instance.enemiesMoving || GameManager.instance.stopAll || shooting) {
+            || GameManager.instance.enemiesMoving || GameManager.instance.stopAll || shooting 
+            || popUpMenuBeingShown) {
             return;
         }
         //following will prevent diagonal moving
@@ -538,9 +540,22 @@ public class Player : Unit {
     }
     public void submit()
     {
+
+        
         if (GameManager.instance.messageBeingShown)
         {
             GameManager.instance.hideMessage();
+            return;
+        }
+
+        if (!isActivePlayer || popUpMenuBeingShown)
+        {
+            return;
+        }
+        if (shooting)
+        {
+            cancel();
+            return;
         }
         else if (ATB <= 0 && GameManager.instance.singlePlayerMove) //removed movePoints <= 0, trying to streamline to only ATB
         {
@@ -677,6 +692,16 @@ public class Player : Unit {
     }
 
     public void startButton() {
+        if (!isActivePlayer)
+        {
+            return;
+        }
+        if (shooting)
+        {
+            cancel();
+            return;
+        }
+
         if (GameManager.instance.singlePlayerMove && !GameManager.instance.stopAll)
         //you need the second of the above conditions to prevent mashed output from messing you
         //up
@@ -702,7 +727,10 @@ public class Player : Unit {
 
     public void menu() {
         if (!GameManager.instance.messageBeingShown && isActivePlayer) {
-            GameManager.instance.toggleHints();
+            popUpMenuBeingShown = true;
+            GameManager.instance.popUpMenuBeingShown = true;
+            GameManager.instance.PopUpMenu.SetActive(true);
+            // GameManager.instance.toggleHints();
         }
     }
 }
