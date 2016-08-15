@@ -4,7 +4,7 @@ using System.Collections;
 public class Alejandra : Character
 {
 
-
+    
 
     void Start()
     {
@@ -58,8 +58,10 @@ public class Alejandra : Character
                 {
                     return returnVal;
                 }
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().alejandraReduceSpecialValue(90);
                 if (self.specialGauge.ReduceSpecialValue(65))
                 {
+                    SoundManager.instance.PlaySingle(2, startSpecialSound);
                     Debug.Log("demonstrike worked");
                     self.turnBlue();
                     //startedSpecial = true;
@@ -77,17 +79,21 @@ public class Alejandra : Character
             case "unstoppable":
                 if (self.ATB > 0) {
                     self.specialGauge.BlinkRed(0.1f);
+                    GameManager.instance.LeftUI.GetComponent<VitalsUI>().alejandraSpecial.BlinkRed(0.1f);
                 }
 
+                
                 if (self.ATB <= 0 && self.specialGauge.ReduceSpecialValue(90))
                 {
-
+                    GameManager.instance.LeftUI.GetComponent<VitalsUI>().alejandraReduceSpecialValue(90);
                     //
+                    SoundManager.instance.PlaySingle(2, startSpecialSound);
                     self.turnBlue();
                     self.SetATB(100);
                     returnVal = true;
                 }
                 else {
+                    SoundManager.instance.PlaySingle(2, ((Player)self).cancelSound);
                     returnVal = false;
                 }
                 self.Invoke("becomeNormal", 1f);

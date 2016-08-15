@@ -25,17 +25,23 @@ public class VitalBar : MonoBehaviour {
         // Debug.Log(transform.rect.width);
         // Debug.Log("vat");
 
+        if (transform) { 
         transform.localScale = new Vector3((float)currVal/maxVal,1.0f,1.0f);
+        }
         //Debug.Log(transform.rect.width);
     }
     //Call this whenever you change health
     public void BecomeBlue()
     {
-        transform.gameObject.GetComponent<RawImage>().color = Color.blue;
+        if (transform) { 
+            transform.gameObject.GetComponent<RawImage>().color = Color.blue;
+        }
     }
     //Call this whenever you change health
     public void BecomeGreen()
     {
-        transform.gameObject.GetComponent<RawImage>().color = Color.green;
+        if (transform) { 
+            transform.gameObject.GetComponent<RawImage>().color = Color.green;
+        }
     }
 }

@@ -4,8 +4,8 @@ using System.Collections;
 
 public class Hugo : Character
 {
-
-
+    public AudioClip turnAroundSound;
+    public AudioClip getIntelSound;
     InfoUI actualInfo;
     void Start()
     {
@@ -59,14 +59,18 @@ public class Hugo : Character
         {
             case "turnaround":
                 //Debug.Log("turnaround is reached");
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().hugoReduceSpecialValue(50);
                 if (self.specialGauge.ReduceSpecialValue(50))
                 {
+
+                    SoundManager.instance.PlaySingle(2, startSpecialSound);
                     Debug.Log("turnaround worked");
                     self.turnRed() ;
                     startedSpecial = true;
                     returnVal = true;
                 }
                 else {
+                    SoundManager.instance.PlaySingle(2, ((Player)self).cancelSound);
                     returnVal = false;
                 }
                 //the following invocation works for both the case where it actually works, and
@@ -102,6 +106,7 @@ public class Hugo : Character
             switch (currentSpecial)
             {
                 case "turnaround":
+                    SoundManager.instance.PlaySingle(2, turnAroundSound);
                     if (target is Unit)
                     {
                         
@@ -141,28 +146,35 @@ public class Hugo : Character
                 || category.Equals("none"))
             {
                 retVal = shooter.specialGauge.ReduceSpecialValue(0);
-             }
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().hugoReduceSpecialValue(0);
+            }
             else if(category.Equals("enemy"))
             {
-                retVal = shooter.specialGauge.ReduceSpecialValue(6);
                 
-                if (retVal) { 
+                retVal = shooter.specialGauge.ReduceSpecialValue(6);
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().hugoReduceSpecialValue(6);
+
+                if (retVal) {
+
                     gridSelector.GetComponent<GridSelector>().setAnalyzed();
                     shooter.LoseATB(5);
                 }
             }
             else if (category.Equals("wall"))
             {
+                SoundManager.instance.PlaySingle(2, getIntelSound);
                 retVal = shooter.specialGauge.ReduceSpecialValue(2);
-
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().hugoReduceSpecialValue(2);
                 if (retVal)
                 {
+
                     gridSelector.GetComponent<GridSelector>().setAnalyzed();
                     shooter.LoseATB(5);
                 }
             }
 
             if (retVal) {
+                SoundManager.instance.PlaySingle(2, getIntelSound);
                 actualInfo.SetMessage(
                 gridSelector.GetComponent<GridSelector>().message);
             }

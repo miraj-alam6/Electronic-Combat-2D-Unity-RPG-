@@ -52,9 +52,10 @@ public class GameManager : MonoBehaviour {
     public bool popUpMenuBeingShown = false;
     private void OnLevelWasLoaded(int index)
     {
-        
+        Debug.Log("Kuch kuch");
         if (noMoreLevelOnNextLoad)
         {
+            Debug.Log("Why");
             inMenuScreen = true;
             PopUpMenu.SetActive(false);
             LeftUI.SetActive(false);
@@ -63,6 +64,8 @@ public class GameManager : MonoBehaviour {
             noMoreLevelOnNextLoad = false;
         }
         else if (noMoreMenuOnNextLoad) {
+            Debug.Log("Hota Hai");
+            resetVitalsUI();
             inMenuScreen = false;
             PopUpMenu.SetActive(false);
             LeftUI.SetActive(true);
@@ -149,6 +152,7 @@ public class GameManager : MonoBehaviour {
             RightUI.SetActive(false);
             return;
         }
+        LeftUI.GetComponent<VitalsUI>().refreshUI();
         MiddleUI.SetActive(false);
         actualInfo = GameManager.instance.RightUI.GetComponent<InfoUI>();
         enemies = new List<Enemy>();
@@ -486,32 +490,54 @@ public class GameManager : MonoBehaviour {
 
     public void GonnaRestartLevel()
     {
+        noMoreMenuOnNextLoad = true;
         currentDeathsForLevel++;
         GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliHP(1, 1);
         GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliATB(100, 0);
         Invoke("RestartLevel", levelDoneDelay);
     }
+    public void resetVitalsUI() {
+        Debug.Log("This happens");
+        GameManager.instance.LeftUI.GetComponent<VitalsUI>().KaliSetSpecial(25);
+        GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliHP(1, 1);
+        GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliATB(100, 0);
+        GameManager.instance.LeftUI.GetComponent<VitalsUI>().winoaSetSpecial(25);
+        GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateWinoaHP(1, 1);
+        GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateWinoaATB(100, 0);
+        GameManager.instance.LeftUI.GetComponent<VitalsUI>().hugoSetSpecial(25);
+        GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateHugoHP(1, 1);
+        GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateHugoATB(100, 0);
+        GameManager.instance.LeftUI.GetComponent<VitalsUI>().alejandraSetSpecial(25);
+        GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateAlejandraHP(1, 1);
+        GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateAlejandraATB(100, 0);
+    }
 
     public void DoneWithLevel() {
       
         currentDeathsForLevel = 0;
-        GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliHP(1, 1);
-        GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliATB(100, 0);
-        if (levelNumber == 3) {
+        resetVitalsUI();
+        
+        
+//        Invoke("LoadNextLevel", levelDoneDelay);
+        Invoke("GoToEndLevelScreen",  levelDoneDelay);
+    }
+    public void GoToEndLevelScreen() {
+        if (levelNumber == 3)
+        {
+            Destroy(SoundManager.instance.gameObject);
+        }
+        if (levelNumber == 8)
+        {
             Destroy(SoundManager.instance.gameObject);
         }
         levelNumber++;
-//        Invoke("LoadNextLevel", levelDoneDelay);
-        Invoke("GoToEndLevelScreen", levelDoneDelay);
-    }
-    public void GoToEndLevelScreen() {
         noMoreLevelOnNextLoad = true;
         whichMenu = "level_done";
         Application.LoadLevel("_Scenes/Menu");
     }
     public void RestartLevel()
     {
-       
+        noMoreMenuOnNextLoad = true;
         if (currentLevel is TutorialLevel1)
         {
             //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
@@ -625,6 +651,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void LoadLevelByNumber(int lvlNumber) {
+        noMoreMenuOnNextLoad = true;
         switch (lvlNumber) {
             case 1:
                 Application.LoadLevel("_Scenes/Tutorial1");

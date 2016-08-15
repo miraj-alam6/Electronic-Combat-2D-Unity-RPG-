@@ -10,7 +10,7 @@ public abstract class Character : MonoBehaviour {
     protected  bool executedSpecial = false;
     protected string[] allMoves;
     protected string[] allWeapons;
-
+    public AudioClip startSpecialSound;
 	public void ChangeSpecialUp () {
         if (startedSpecial) {
             cantSwitchSpecial = true;

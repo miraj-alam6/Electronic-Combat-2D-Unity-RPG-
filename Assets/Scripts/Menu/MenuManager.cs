@@ -276,13 +276,16 @@ public class MenuManager : MonoBehaviour {
 
             else if (choice == 3)
             {
+                Debug.Log("thee hell");
                 if (levelDoneScreen.setToggledChoice(3, true)) {
-                  //  Debug.Log("You have hints");
+                    GameManager.instance.hintsOn = true;
+                    Debug.Log("Turned on hints");
                 }
                 else
                 {
                     GameManager.instance.hintsOn = false;
-                 //   Debug.Log("No more hints");
+                    Debug.Log("Turned off hints");
+                    //   Debug.Log("No more hints");
                 }
                 return;
             }
@@ -328,7 +331,8 @@ public class MenuManager : MonoBehaviour {
             {
               //  Debug.Log("A new journey begins");
                 GameManager.instance.noMoreMenuOnNextLoad = true;
-                Application.LoadLevel("_Scenes/Tutorial1");
+                GameManager.instance.levelNumber = 1;
+                LoadNextLevel();
             }
             //Load game here
             else if (primaryChoice == 1)

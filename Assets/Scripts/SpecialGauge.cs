@@ -5,6 +5,7 @@ using System;
 
 public class SpecialGauge : MonoBehaviour {
     public Text specialValueText;
+    public string playerName; 
     int specialValue; //Highest in can normally go up to is 100, possibly more late in game
     public int startingValue;
     // Use this for initialization
@@ -57,6 +58,11 @@ public class SpecialGauge : MonoBehaviour {
     }
     public int GetSpecialValue() {
         return specialValue;
+    }
+
+    public void SetSpecialValue(int val) {
+        specialValue = val;
+        UpdateGauge();
     }
 
 }

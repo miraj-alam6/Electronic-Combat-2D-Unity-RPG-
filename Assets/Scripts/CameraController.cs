@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour {
     public float inverseMoveTime;
     public bool testingChumma;
     public bool isActive = false;
-    
+    public float lastTime;
     public Rigidbody2D rb2D;
     // Use this for initialization
 	void Start () {
@@ -52,6 +52,7 @@ public class CameraController : MonoBehaviour {
     public IEnumerator SmoothMovement(Vector3 end)
     {
         float sqrRemainingDistance = (transform.position - end).sqrMagnitude; //sqrmagnitude is being
+        lastTime = Time.time;
         //used because it is computationally cheaper than magnitude.
         while (sqrRemainingDistance > 0.002)
         { //float.Epsilon is super small, almost 0
@@ -61,6 +62,9 @@ public class CameraController : MonoBehaviour {
             //now reupdate sqrRemainingDistance so that we don't infinitely loop
             sqrRemainingDistance = (transform.position - end).sqrMagnitude;
             //Debug.Log(sqrRemainingDistance);
+            if (Time.time - lastTime > 0.1f) {
+                yield break;
+            }
             yield return null; //this means wait for a frame before reevaluating this loop
 
         }

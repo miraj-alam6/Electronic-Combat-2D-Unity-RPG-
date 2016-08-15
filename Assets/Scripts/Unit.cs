@@ -326,12 +326,108 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
         {
             healthBar.UpdateVitalBar(MaxHP, HP);
         }
-        
-        if (name.Equals("Kali"))
+
+        updateVitalsUIHP();
+    }
+
+    public void updateVitalsUIHP()
+    {
+        switch (name)
         {
-            GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliHP(MaxHP, HP);
+
+            case "Kali":
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliHP(MaxHP, HP);
+                break;
+            case "Winoa":
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateWinoaHP(MaxHP, HP);
+                break;
+            case "Hugo":
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateHugoHP(MaxHP, HP);
+                break;
+            case "Alejandra":
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateAlejandraHP(MaxHP, HP);
+                break;
+            default:
+                break;
         }
     }
+    public void updateVitalsUIATG()
+    {
+        switch (name)
+        {
+            case "Kali":
+                
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliATB(100, ATB);
+                break;
+            case "Winoa":
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateWinoaATB(100, ATB);
+                break;
+            case "Hugo":
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateHugoATB(100, ATB);
+                break;
+            case "Alejandra":
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateAlejandraATB(100, ATB);
+                break;
+        }
+    }
+    public void updateVitalsUISpecialAdd(float multiplier)
+    {
+        switch (name)
+        {
+            case "Kali":
+
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().
+                KaliAddSpecialValue((int)(multiplier * specialGainRate));
+                break;
+            case "Winoa":
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().
+                winoaAddSpecialValue((int)(multiplier * specialGainRate));
+                break;
+            case "Hugo":
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().
+                hugoAddSpecialValue((int)(multiplier * specialGainRate));
+                break;
+            case "Alejandra":
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().
+                 alejandraAddSpecialValue((int)(multiplier * specialGainRate));
+                break;
+        }
+    }
+
+    //The following function isn't used, because special reduction is specific to each character
+    //thus the appropriate code does stuff in the character scripts rather in the general unit
+    // or player scripts, same with the function after this
+    /*
+    public void updateVitalsUISpecialReduce(int val)
+    {
+        switch (name)
+        {
+            case "Kali":
+                break;
+            case "Winoa":
+                break;
+            case "Hugo":
+                break;
+            case "Alejandra":
+                break;
+        }
+    }
+    public void updateVitalsUISpecialSet()
+    {
+        switch (name)
+        {
+            case "Kali":
+                break;
+            case "Winoa":
+                break;
+            case "Hugo":
+                break;
+            case "Alejandra":
+                break;
+        }
+    }
+    */
+
 
     //Fill up ATB gauge with your speed
     // NOTE: once ATB > 100 you get a baseline special boost
@@ -343,18 +439,26 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
         ATB += Random.Range(minSpeed, maxSpeed);
         if (ATB >= 100)
         {
+            if (name.Equals("Winoa")) {
+                if (GameManager.instance.difficultyLevel >= 2)
+                {
+                    gainHP(3);
+                }
+                else { 
+                    gainHP(4);
+                }
+            }
             GameManager.instance.RefreshMessage();
             specialGauge.AddSpecialValue(specialGainRate);
+            updateVitalsUISpecialAdd(1.0f);
             ATB = 100;
             ATBBar.BecomeGreen();
         }
         if (ATBBar) { 
             ATBBar.UpdateVitalBar(100, ATB);
         }
-        if (name.Equals("Kali"))
-        {
-            GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliATB(100, ATB);
-        }
+        
+        updateVitalsUIATG();
     }
 
     public void SetATB(int val)
@@ -377,10 +481,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
         if (ATBBar)
         {
             ATBBar.UpdateVitalBar(100, ATB);
-            if (name.Equals("Kali"))
-            {
-                GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliATB(100, ATB);
-            }
+            updateVitalsUIATG();
         }
 
 
@@ -397,10 +498,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
         }
         if (ATBBar) { 
             ATBBar.UpdateVitalBar(100,ATB);
-            if (name.Equals("Kali"))
-            {
-                GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliATB(100, ATB);
-            }
+            updateVitalsUIATG();
         }
 
 

@@ -32,6 +32,9 @@ public class Player : Unit {
     public AudioClip drinkSound1;
     public AudioClip drinkSound2;
     public AudioClip gameOverSound;
+    public AudioClip meleeHitSound;
+    public AudioClip shootSound;
+    public AudioClip cancelSound;
     public int debuggingVariable = 0;
     private bool stopShooting;
     public GameObject bullet;
@@ -222,7 +225,8 @@ public class Player : Unit {
         //play 1 of 2 sound effects if player is able to move. Breaks up monotony, having such variation
         if (CanMove(xDir, yDir, out hit))
         {
-            SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
+            //movement is in channel 1
+            SoundManager.instance.RandomizeSfx(1, moveSound1, moveSound2);
             movePoints--;
             LoseATB(ATBCost); // Reduce your ATB
             GameManager.instance.currentUnitPoints = movePoints;
@@ -254,14 +258,14 @@ public class Player : Unit {
             enabled = false; //player will no longer be enabled
         }
         if (other.tag == "Food") {
-
-            SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
+            //voices are in channel 3
+            SoundManager.instance.RandomizeSfx(3,eatSound1, eatSound2);
             gainHP(pointsPerFood);
             other.gameObject.SetActive(false);
         }
         if (other.tag == "Soda")
         {
-            SoundManager.instance.RandomizeSfx(drinkSound1, drinkSound2);
+            SoundManager.instance.RandomizeSfx(3,drinkSound1, drinkSound2);
             gainHP(pointsPerSoda);
             other.gameObject.SetActive(false);
         }
@@ -335,6 +339,7 @@ public class Player : Unit {
             if (hitWall.DamageWall(attack))
             {
                 specialGauge.AddSpecialValue((int)(1.5* specialGainRate));
+                updateVitalsUISpecialAdd(1.5f);
                 tutorial6Helper();
             }
             movePoints -= 2;
@@ -343,12 +348,14 @@ public class Player : Unit {
         if (component is Enemy)
 
         {
-            SoundManager.instance.RandomizeSfx(moveSound1, moveSound1); // TODO: Put new sounds here
+            //punches are in channel 1
+            SoundManager.instance.PlaySingle(1, meleeHitSound); // TODO: Put new sounds here
             Enemy hitEnemy = component as Enemy;
             //Make the enemy lose HP, and if they die, you gain some special
             if (InflictDamage) { 
                 if (hitEnemy.LoseHP(attack,direction)) {
                     specialGauge.AddSpecialValue(4*specialGainRate);
+                    updateVitalsUISpecialAdd(4.0f);
                     tutorial6Helper();
                 }
             }
@@ -364,14 +371,15 @@ public class Player : Unit {
             Pot hitPot = component as Pot;
             if (hitPot.DamagePot(attack)) {
                 specialGauge.AddSpecialValue(specialGainRate);
+                updateVitalsUISpecialAdd(1.0f);
                 tutorial6Helper();
             }
             LoseATB((int)(ATBCost * 1.8));
             movePoints -= 2;
         }
     }
+    
 
- 
     //this will restart the current level. Do this for if you get game over or something.
     private void Restart() {
 
@@ -432,16 +440,14 @@ public class Player : Unit {
             healthBar.UpdateVitalBar(MaxHP, HP);
 
         }
-        if (name.Equals("Kali"))
-        {
-            GameManager.instance.LeftUI.GetComponent<VitalsUI>().UpdateKaliHP(MaxHP, HP);
-        }
+        updateVitalsUIHP();
+       
         return dead;
         //CheckIfGameOver();
     }
     private void CheckIfGameOver() {
         if (HP <= 0) {
-            SoundManager.instance.PlaySingle(gameOverSound);
+            SoundManager.instance.PlaySingle(3,gameOverSound);
             SoundManager.instance.musicSource.Stop();
             GameManager.instance.GameOver();
         }
@@ -465,8 +471,8 @@ public class Player : Unit {
     {
         
         if (ATB <= 0 || !isActivePlayer ||  !GameManager.instance.singlePlayerMove || !GameManager.instance.playersTurn
-            || GameManager.instance.enemiesMoving || GameManager.instance.stopAll || shooting 
-            || popUpMenuBeingShown) {
+            || GameManager.instance.enemiesMoving || GameManager.instance.stopAll
+            || popUpMenuBeingShown || inputCoolDown  || shooting) {
             return;
         }
         //following will prevent diagonal moving
@@ -576,12 +582,13 @@ public class Player : Unit {
     }
     public void cancel()
     {
+        GameManager.instance.stopAll = false;
         if (shooting)
         {
+            Debug.Log("kuck kuch hota hai yooo");
             GameObject gridSelector = GameObject.FindGameObjectWithTag("GridSelector");
             gridSelector.GetComponent<GridSelector>().disappear();
             shooting = false;
-            inputCoolDown = true;
             GameManager.instance.UpdateCamera();
         }
         
@@ -636,14 +643,19 @@ public class Player : Unit {
 
             if (ATB <= 0 || !(character.fireWeapon(this, gridSelector)))
             {
+                SoundManager.instance.PlaySingle(2,cancelSound);
                 stopShooting = true;
-                cancel(); //uncomment this to make things work i think
+                GameManager.instance.stopAll = true;
+                Invoke("cancel",0.1f); //uncomment this to make things work i think
                 return;
             }
-          
-            // GameObject bullet = Instantiate(greenBullet, new Vector3(x, y, 0), Quaternion.identity)
-            //     as GameObject;
-            int xDiff = gridX - x;
+
+            if (!(name.Equals("Hugo"))) {
+                SoundManager.instance.PlaySingle(2,shootSound);
+            }
+                // GameObject bullet = Instantiate(greenBullet, new Vector3(x, y, 0), Quaternion.identity)
+                //     as GameObject;
+                int xDiff = gridX - x;
             int yDiff = gridY - y;
 
             if (Math.Abs(xDiff) > Math.Abs(yDiff))

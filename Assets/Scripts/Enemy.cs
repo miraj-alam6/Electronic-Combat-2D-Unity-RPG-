@@ -13,6 +13,9 @@ public class Enemy : Unit {
     
     public AudioClip enemyAttackSound1;
     public AudioClip enemyAttackSound2;
+    public AudioClip meleeSound;
+    public AudioClip hitSound;
+    public AudioClip dieSound;
     public List<int> movesToDo;
     public bool canBreakWalls = false;
     public string targetName = "Kali";
@@ -213,7 +216,7 @@ public class Enemy : Unit {
 
     protected IEnumerator DieAnimation()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
 
         dead = true;
         GameManager.instance.gameCalculation.actualGrid[y, x].hasEnemy = false;
@@ -225,7 +228,7 @@ public class Enemy : Unit {
     //enemy was not killed.
     public bool LoseHP(int attack, int attackerDirection)
     {
-
+        SoundManager.instance.PlaySingle(3,hitSound);
         float multiplier = 1.0f;
 
         if (checkIfBackAttack(attackerDirection, direction))
@@ -243,6 +246,7 @@ public class Enemy : Unit {
             HP = 0;
             ATB = 0;
             GameManager.instance.stopAll = true;
+            SoundManager.instance.PlaySingle(4, dieSound);
             StartCoroutine(DieAnimation()); 
         }
         if (healthBar) { 
@@ -287,8 +291,9 @@ public class Enemy : Unit {
             movePoints--;
         }
         if (component is Player) {
-            LoseATB((int)(ATBCost * 0.5)); 
-            SoundManager.instance.RandomizeSfx(enemyAttackSound1,enemyAttackSound2);
+            LoseATB((int)(ATBCost * 0.5));
+            SoundManager.instance.PlaySingle(2, meleeSound);
+            SoundManager.instance.RandomizeSfx(3,enemyAttackSound1,enemyAttackSound2);
             Player hitPlayer = component as Player;
             if (direction == 1) { 
                 animator.SetTrigger("AttackDown");

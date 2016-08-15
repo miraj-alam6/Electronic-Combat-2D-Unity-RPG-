@@ -23,7 +23,7 @@ public class Wall : MonoBehaviour {
 	
 	}
     public bool DamageWall(int loss) {
-        SoundManager.instance.RandomizeSfx(chopSound1, chopSound2);
+        SoundManager.instance.RandomizeSfx(1,chopSound1, chopSound2);
         spriteRenderer.sprite = dmgSprite;
         hp -= loss;
         if (hp <= 0) {

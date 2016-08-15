@@ -148,8 +148,7 @@ public class GridSelector : MonoBehaviour {
     }
     public bool Move(int xDir, int yDir) 
     {
-        message = "Nothing here";
-        shortmessage = "none";
+
         Vector3 start = transform.position; //implicitly discards transform.position's z 
         //axis thus converting a vector3 to a vector2 without need for an explicit cast
         Vector3 end = start + new Vector3(xDir, yDir,0); 
@@ -175,6 +174,8 @@ public class GridSelector : MonoBehaviour {
                 isActive = true;
                 return false;
             }
+            message = "Nothing here";
+            shortmessage = "none";
             //Debug.Log("End:" + xDir + "," + yDir);
             StartCoroutine(SmoothMovement(end));
             return true; //this means we were able to move.

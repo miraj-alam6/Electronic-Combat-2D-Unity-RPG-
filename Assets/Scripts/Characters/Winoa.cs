@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 
 public class Winoa : Character {
+    public AudioClip healSound;
     int standardRepairRecoverPoints;
     void Start()
     {
@@ -57,17 +58,20 @@ public class Winoa : Character {
                 if (specialValue >= 75)
                 {
                     Debug.Log("halt worked");
+                    SoundManager.instance.PlaySingle(2,startSpecialSound);
                     self.turnYellow();
                     startedSpecial = true;
                     returnVal = true;
                     self.InflictDamage = false;
                 }
                 else {
+                    SoundManager.instance.PlaySingle(2, ((Player)self).cancelSound);
                     returnVal = false;
                 }
                 //the following invocation works for both the case where it actually works, and
                 //when it doesn't
                 self.specialGauge.ReduceSpecialValue(75);
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().winoaReduceSpecialValue(75);
                 break;
 
             case "charge":
@@ -101,6 +105,7 @@ public class Winoa : Character {
                     if (target is Unit)
                     {
                         target.gainHP(standardRepairRecoverPoints);
+                        SoundManager.instance.PlaySingle(2,healSound);
                     }
                     break;
 
@@ -120,6 +125,7 @@ public class Winoa : Character {
         if (currentWeapon.Equals("pink"))
         {
             retVal = shooter.specialGauge.ReduceSpecialValue(12);
+            GameManager.instance.LeftUI.GetComponent<VitalsUI>().winoaReduceSpecialValue(12);
             if (retVal)
             {
                 shooter.LoseATB(shooter.ATBCost);

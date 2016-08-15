@@ -29,7 +29,7 @@ public class Pot : MonoBehaviour {
 
     public bool DamagePot(int loss)
     {
-        SoundManager.instance.RandomizeSfx(hitPotSound1, hitPotSound2);
+        SoundManager.instance.RandomizeSfx(1, hitPotSound1, hitPotSound2);
         animator.SetTrigger("Hit");
         hp -= loss;
         if (hp <= 0)
@@ -39,7 +39,7 @@ public class Pot : MonoBehaviour {
             collider.enabled = false;
             //gameObject.SetActive(false);
             animator.SetTrigger("Break");
-            SoundManager.instance.PlaySingle(potBreakSound);
+            SoundManager.instance.PlaySingle(4, potBreakSound);
             GameManager.instance.currentLevel.updateLevel("broke_pot");
             //if the pot contains a collectible, instantiate it
             if (collectible) {

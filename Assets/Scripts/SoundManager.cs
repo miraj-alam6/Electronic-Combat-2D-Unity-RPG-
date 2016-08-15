@@ -3,7 +3,10 @@ using System.Collections;
 
 //Gonna use the same singleton pattern that we used in GameManager here.
 public class SoundManager : MonoBehaviour {
-    public AudioSource efxSource;
+    public AudioSource efxSource1;
+    public AudioSource efxSource2;
+    public AudioSource efxSource3;
+    public AudioSource efxSource4;
     public AudioSource musicSource;
     public static SoundManager instance = null;
 
@@ -28,21 +31,64 @@ public class SoundManager : MonoBehaviour {
 
     //Will be called from our other scripts
     //AudioClips are assets that contain digital recordings
-    public void PlaySingle(AudioClip clip)
+    //sounds will be played in 1 of 4 different channels
+    public void PlaySingle(int channel, AudioClip clip)
     {
-        efxSource.clip = clip;
-        efxSource.Play();
+        switch (channel) {
+            case 1:
+                efxSource1.clip = clip;
+                efxSource1.Play();
+                break;
+            case 2:
+                efxSource2.clip = clip;
+                efxSource2.Play();
+                break;
+            case 3:
+                efxSource3.clip = clip;
+                efxSource3.Play();
+                break;
+            case 4:
+                efxSource4.clip = clip;
+                efxSource4.Play();
+                break;
+        }
+        
     }
 
     //This function will take audio clips and randomly play one of them in a random pitch
     //using a narrow window of possibly pitches
     //params parameter lets us pass in a comma seperated list of parameters of the type as specified
     //by the parameter that comes after params keyword
-    public void RandomizeSfx(params AudioClip [] clips) {
+      
+    public void RandomizeSfx(int channel, params AudioClip[] clips)
+    {
         int randomIndex = Random.Range(0, clips.Length);
-        float randomPitch = Random.Range(lowPitchRange,highPitchRange);
-        efxSource.pitch = randomPitch;
-        efxSource.clip = clips[randomIndex];
-        efxSource.Play();
+        float randomPitch = Random.Range(lowPitchRange, highPitchRange);
+
+
+        switch (channel)
+        {
+            case 1:
+                efxSource1.clip = clips[randomIndex];
+                efxSource1.pitch = randomPitch;
+                efxSource1.Play();
+                break;
+            case 2:
+                efxSource2.clip = clips[randomIndex];
+                efxSource2.pitch = randomPitch;
+                efxSource2.Play();
+                break;
+            case 3:
+                efxSource3.clip = clips[randomIndex];
+                efxSource3.pitch = randomPitch;
+                efxSource3.Play();
+                break;
+            case 4:
+                efxSource4.clip = clips[randomIndex];
+                efxSource4.pitch = randomPitch;
+                efxSource4.Play();
+                break;
+        }
+       
     }
 }

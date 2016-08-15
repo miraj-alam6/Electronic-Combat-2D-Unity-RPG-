@@ -4,7 +4,7 @@ using System;
 
 public class Kali : Character {
 
-
+    public AudioClip haltSound;
 
     void Start() {
         allMoves = new string[1] {"halt"}; //modify this later to include more moves
@@ -51,17 +51,21 @@ public class Kali : Character {
                  Debug.Log("halt is reached");
                 if (specialValue >= 80)
                 {
+                    SoundManager.instance.PlaySingle(2, startSpecialSound);
                     Debug.Log("halt worked");
                     self.turnCyan();
                     startedSpecial = true;
                     returnVal = true;
                 }
-                else { 
+                else {
+                    SoundManager.instance.PlaySingle(2, ((Player)self).cancelSound);
                     returnVal = false;
                 }
                 //the following invocation works for both the case where it actually works, and
                 //when it doesn't
                 self.specialGauge.ReduceSpecialValue(80);
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().KaliReduceSpecialValue(80);
+              
                 break;
                 
             case "charge":
@@ -92,6 +96,7 @@ public class Kali : Character {
                 case "halt":
                     if (target is Unit) {
                         target.LoseATB(100);
+                        SoundManager.instance.PlaySingle(2,haltSound);
                     }
                     break;
 
@@ -111,6 +116,9 @@ public class Kali : Character {
         if (currentWeapon.Equals("green"))
         {
             retVal = shooter.specialGauge.ReduceSpecialValue(25);
+            GameManager.instance.LeftUI.GetComponent<VitalsUI>().
+                KaliReduceSpecialValue(25);
+            
             if (retVal)
             {
                 shooter.LoseATB(shooter.ATBCost);

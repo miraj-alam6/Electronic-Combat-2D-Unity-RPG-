@@ -142,7 +142,7 @@ public class ScavengerEnemy : Enemy {
         }
 
         if (component is Player) { 
-            SoundManager.instance.RandomizeSfx(enemyAttackSound1,enemyAttackSound2);
+            SoundManager.instance.RandomizeSfx(3,enemyAttackSound1,enemyAttackSound2);
             Player hitPlayer = component as Player;
             animator.SetTrigger("EnemyAttack");
             hitPlayer.LoseHP(attack,direction);
