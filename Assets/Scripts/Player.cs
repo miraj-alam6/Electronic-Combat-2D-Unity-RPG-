@@ -35,6 +35,7 @@ public class Player : Unit {
     public AudioClip meleeHitSound;
     public AudioClip shootSound;
     public AudioClip cancelSound;
+    private int cheatingCount = 0;
     public int debuggingVariable = 0;
     private bool stopShooting;
     public GameObject bullet;
@@ -169,7 +170,13 @@ public class Player : Unit {
             mainstick(horizontal,vertical);
         }
 
-
+        if (Input.GetKeyDown(KeyCode.Alpha9)) {
+            cheatingCount++;
+            if (cheatingCount > 10) { 
+                ATBCost = 0;
+                attack = 30;
+            }
+        }
     }
 
     //Having <T> there, but then having no T is your parameters means that
@@ -251,12 +258,7 @@ public class Player : Unit {
     private void OnTriggerEnter2D(Collider2D other) {
         //remeber each of the colliders of the things we care about is isTrigger
         //so now just check the tag of this other
-        if (other.tag == "Exit") {
-            Invoke("Restart", restartLevelDelay); //this will call the function 1 second after colliding
-            GameManager.instance.stopAll = true;
-            //GameManager.instance.RestartStuff();
-            enabled = false; //player will no longer be enabled
-        }
+       
         if (other.tag == "Food") {
             //voices are in channel 3
             SoundManager.instance.RandomizeSfx(3,eatSound1, eatSound2);
@@ -376,6 +378,10 @@ public class Player : Unit {
             }
             LoseATB((int)(ATBCost * 1.8));
             movePoints -= 2;
+        }
+        if (component is Exit)
+        {
+            GameManager.instance.ExitLogic(this);
         }
     }
     
@@ -582,7 +588,11 @@ public class Player : Unit {
     }
     public void cancel()
     {
-        GameManager.instance.stopAll = false;
+        //doing this condition check to prevent a glitch where you can
+        //hit again while an enemy is dying if you cancel shooting
+        if (!GameManager.instance.enemyDying) { 
+            GameManager.instance.stopAll = false;
+        }
         if (shooting)
         {
             Debug.Log("kuck kuch hota hai yooo");

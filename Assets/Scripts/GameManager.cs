@@ -5,6 +5,14 @@ using UnityEngine.UI;
 
 
 public class GameManager : MonoBehaviour {
+    public bool levelMusicContinue;
+    public AudioClip levels1to3Music;
+    public AudioClip levels4to8Music;
+    public AudioClip levels9to11Music;
+    public AudioClip level12Music;
+    public bool gonnaQuitToTitle = false;
+    public bool storyMusicPaused = false;
+    public bool levelMusicPaused = false;
     public bool inMenuScreen = false;
     public bool noMoreMenuOnNextLoad = false;
     public bool noMoreLevelOnNextLoad = false;
@@ -35,6 +43,7 @@ public class GameManager : MonoBehaviour {
     //part of Unity API, is called every time a scene is loaded
     public int currentUnitPoints;
     public bool stopAll = false;
+    public bool enemyDying = false;
     public bool debuggingBrah = false;
     public bool readyToDestroyPlayerTurn = false;
     public GameCalculation gameCalculation; //this has the code to do A star algorithm
@@ -50,30 +59,166 @@ public class GameManager : MonoBehaviour {
     public int difficultyLevel; //0 is easy, 1 is normal, 2 is hard
     public string whichMenu = "level_done";
     public bool popUpMenuBeingShown = false;
+    public FinalBattle finalBattleStuff;
     private void OnLevelWasLoaded(int index)
     {
-        Debug.Log("Kuch kuch");
+        //Debug.Log("Kuch kuch");
         if (noMoreLevelOnNextLoad)
         {
-            Debug.Log("Why");
+            //Debug.Log("Why do we");
             inMenuScreen = true;
             PopUpMenu.SetActive(false);
             LeftUI.SetActive(false);
             RightUI.SetActive(false);
             MiddleUI.SetActive(false);
             noMoreLevelOnNextLoad = false;
+            
         }
         else if (noMoreMenuOnNextLoad) {
-            Debug.Log("Hota Hai");
+          //  Debug.Log("Hota Hai");
             resetVitalsUI();
             inMenuScreen = false;
             PopUpMenu.SetActive(false);
             LeftUI.SetActive(true);
             RightUI.SetActive(true);
             noMoreMenuOnNextLoad = false;
+            FindCorrectMusic();
         }
         InitGame();//initgame will manage our UI and manage the stuff
 
+    }
+    public void FindCorrectMusic() {
+        SoundManager.instance.storyMusicSource.Pause();
+        storyMusicPaused = true;
+        if (levelNumber >= 1 && levelNumber <= 3)
+        {
+            if (levelMusicPaused)
+            {
+                SoundManager.instance.musicSource.UnPause();
+                levelMusicPaused = false;
+            }
+            else if (levelMusicContinue)
+            {
+                return;
+            }
+            else {
+                SoundManager.instance.musicSource.clip = levels1to3Music;
+                SoundManager.instance.musicSource.Play();
+            }
+        }
+
+        if (levelNumber>= 4 && levelNumber <= 8) {
+            if (levelMusicPaused)
+            {
+                SoundManager.instance.musicSource.UnPause();
+                levelMusicPaused = false;
+            }
+            else if (levelMusicContinue)
+            {
+                return;
+            }
+            else {
+                SoundManager.instance.musicSource.clip = levels4to8Music;
+                SoundManager.instance.musicSource.Play();
+            }
+        }
+
+        if (levelNumber >= 9 && levelNumber <= 11)
+        {
+            if (levelMusicPaused)
+            {
+                SoundManager.instance.musicSource.UnPause();
+                levelMusicPaused = false;
+            }
+            else if (levelMusicContinue)
+            {
+                return;
+            }
+            else {
+                SoundManager.instance.musicSource.clip = levels9to11Music;
+                SoundManager.instance.musicSource.Play();
+            }
+        }
+        if (levelNumber >= 12)
+        {
+            
+            if (levelMusicContinue)
+            {
+                return;
+            }
+            else {
+                SoundManager.instance.musicSource.clip = level12Music;
+                SoundManager.instance.musicSource.Play();
+            }
+        }
+    }
+    //This is called whenever a player steps onto an Exit thingy
+    public void ExitLogic(Player player) {
+        
+        Debug.Log("Yes here");
+        if (currentLevel is TutorialLevel9) {
+            if (currentLevel.updateLevel("remove_player"))
+            {
+                RemovePlayer(player);
+            }
+            else {
+                showMessage("You have not collected enough chicken flowers to end the level yet.");
+            }
+        }
+        if (currentLevel is TutorialLevel10)
+        {
+            if (currentLevel.updateLevel("remove_player"))
+            {
+                RemovePlayer(player);
+            }
+            else {
+                showMessage("You have not collected enough battery boxes to end the level yet");
+            }
+        }
+        if (currentLevel is TutorialLevel11)
+        {
+            Debug.Log("Why not here");
+            if (currentLevel.updateLevel("remove_player"))
+            {
+                RemovePlayer(player);
+            }
+           
+        }
+        if (currentLevel is TutorialLevel12)
+        {
+            if (currentLevel.updateLevel("remove_player"))
+            {
+                RemovePlayer(player);
+            }
+            else {
+                showMessage("You cannot escape until you defeat Roxanne");
+            }
+        }
+    }
+    public void RemovePlayer(Player player) {
+        units.Remove(player);
+        players.Remove(player);
+        switch (player.name) {
+            case "Kali":
+                currentLevel.kaliHere = false;
+            break;
+            case "Winoa":
+                currentLevel.winoaHere = false;
+                break;
+            case "Hugo":
+                currentLevel.hugoHere = false;
+                break;
+            case "Alejandra":
+                currentLevel.alejandraHere = false;
+                break;
+        }
+
+        currentUnit = null;
+        playersTurn = false;
+        singlePlayerMove = false;
+        GameManager.instance.gameCalculation.actualGrid[player.y, player.x].hasPlayer = false;
+        GameManager.instance.gameCalculation.actualGrid[player.y, player.x].walkable = true;
+        player.gameObject.SetActive(false);
     }
     //use this in future when you move away the stuff from OnLevelWasLoaded cause apprantly that's
     //a problem in mobile device
@@ -140,9 +285,14 @@ public class GameManager : MonoBehaviour {
 
     //side effect of this function is that stopAll will become false, may not always intend this.
     public void hideMessage() {
+        
         stopAll = false;
         messageBeingShown = false;
         MiddleUI.SetActive(false);
+        if (gonnaQuitToTitle)
+        {
+            goBackToTitleScreen();
+        }
     }
     //gonna use BoardManager's setup scene function
     void InitGame() {
@@ -223,10 +373,46 @@ public class GameManager : MonoBehaviour {
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial9") || Application.loadedLevelName.Equals("Tutorial9"))
         {
             levelNumber = 9;
+            levelMusicContinue = true;
+           
             currentLevel = new TutorialLevel9(currentDeathsForLevel);
             Debug.Log(currentLevel);
-            infoUI.SetActualObjective("Collect "+ ((TutorialLevel9)currentLevel).goalChickens+ "\nChicken Flowers");
+            infoUI.SetActualObjective("Collect "+ ((TutorialLevel9)currentLevel).goalChickens+ "\nChicken Flowers,\nand escape.");
         }
+        else if (Application.loadedLevelName.Equals("_Scenes/Tutorial10") || Application.loadedLevelName.Equals("Tutorial10"))
+        {
+            levelNumber = 10;
+            levelMusicContinue = true;
+            currentLevel = new TutorialLevel10(currentDeathsForLevel);
+            Debug.Log(currentLevel);
+            infoUI.SetActualObjective("Collect " + ((TutorialLevel10)currentLevel).goalElectric + "\nBatter Boxes,\nand escape.");
+        }
+        else if (Application.loadedLevelName.Equals("_Scenes/Tutorial11") || Application.loadedLevelName.Equals("Tutorial11"))
+        {
+            levelNumber = 11;
+            levelMusicContinue = true;
+            currentLevel = new TutorialLevel11(currentDeathsForLevel);
+            Debug.Log(currentLevel);
+            infoUI.SetActualObjective("Escape the stage.");
+        }
+        else if (Application.loadedLevelName.Equals("_Scenes/Tutorial12") || Application.loadedLevelName.Equals("Tutorial12"))
+        {
+            levelNumber = 12;
+            levelMusicContinue = true;
+            currentLevel = new TutorialLevel12(currentDeathsForLevel);
+            Debug.Log(currentLevel);
+            infoUI.SetActualObjective("Defeat Roxanne\nand\nescape the stage.");
+        }
+        else if (Application.loadedLevelName.Equals("_Scenes/HasBugOnlyKeepAlejandra") || Application.loadedLevelName.Equals("HasBugOnlyKeepAlejandra"))
+        {
+            levelNumber = 11;
+            levelMusicContinue = true;
+            currentLevel = new TutorialLevel11(currentDeathsForLevel);
+            Debug.Log(currentLevel);
+            infoUI.SetActualObjective("tHIS WILL HAVE A BUG");
+            Debug.Log("Here here dsklajdla ");
+        }
+
         if (currentLevel !=  null) { 
         currentLevel.retainHintsSetting(hintsOn);
         }
@@ -237,10 +423,19 @@ public class GameManager : MonoBehaviour {
         //NOTE: comment/uncomment this if you don't want/want level image again
         levelImage = GameObject.Find("LevelImage");//here we are finding by name, make sure same name in editor
         levelText = GameObject.Find("LevelText").GetComponent<Text>();
-        levelText.text = "Mission " + levelNumber;
+        levelText.text = "Mission " + levelNumber + "\n" +GetLevelName();
         levelImage.SetActive(true);
+        if (currentDeathsForLevel > 0) {
+            levelImage.GetComponent<Image>().color = Color.black;
+        }
 
-        Invoke("HideLevelImage", levelStartDelay); //Use Invoke to wait before invoking a function
+        if (currentDeathsForLevel == 0)
+        {
+            Invoke("HideLevelImage", 2 * levelStartDelay);
+        }
+        else { 
+            Invoke("HideLevelImage", levelStartDelay); //Use Invoke to wait before invoking a function
+        }
         //making stopAll = false here doesn't have the effect of the delay, it does it too fast,
         //so instead i do it in HideLevelImage, because it will be delayed
         //        stopAll = false;
@@ -252,7 +447,49 @@ public class GameManager : MonoBehaviour {
         // singlePlayerMove = true;
     }
 
+    public string GetLevelName() {
+        string s = "";
+        switch (levelNumber) {
+            case 1:
+                s = "Breaker";
+                break;
+            case 2:
+                s = "First Battle";
+                break;
+            case 3:
+                s = "Against The Odds";
+                break;
+            case 4:
+                s = "Impending Fury";
+                break;
+            case 5:
+                s = "Vicious Babies";
+                break;
+            case 6:
+                s = "The Fixer";
+                break;
+            case 7:
+                s = "Intelligent Power";
+                break;
+            case 8:
+                s = "Wall of Steel";
+                break;
+            case 9:
+                s = "Get Chicken";
+                break;
+            case 10:
+                s = "Too Crowded";
+                break;
 
+            case 11:
+                s = "Path Creator";
+                break;
+            case 12:
+                s = "True Combat";
+                break;
+        }
+        return s;
+    }
     //This actually begins the level, DO NOT take it out, it is a good point to realizing that
     //all things have been loaded.
     //hides level image once level actually starts
@@ -513,7 +750,15 @@ public class GameManager : MonoBehaviour {
     }
 
     public void DoneWithLevel() {
-      
+        if (levelNumber == 1 || levelNumber == 2 || (levelNumber >= 4 && levelNumber <= 8)
+            || (levelNumber >= 9 && levelNumber <=10))
+        {
+            levelMusicContinue = true;
+        }
+
+        else {
+            levelMusicContinue = false;
+        }
         currentDeathsForLevel = 0;
         resetVitalsUI();
         
@@ -524,19 +769,35 @@ public class GameManager : MonoBehaviour {
     public void GoToEndLevelScreen() {
         if (levelNumber == 3)
         {
-            Destroy(SoundManager.instance.gameObject);
+            SoundManager.instance.musicSource.Stop();
+
         }
         if (levelNumber == 8)
         {
-            Destroy(SoundManager.instance.gameObject);
+            SoundManager.instance.musicSource.Stop();
         }
+       
         levelNumber++;
         noMoreLevelOnNextLoad = true;
         whichMenu = "level_done";
-        Application.LoadLevel("_Scenes/Menu");
+        if (levelNumber == 12)
+        {
+            SoundManager.instance.musicSource.Stop(); 
+        }
+        if (levelNumber == 13)
+        {
+            PlayerPrefs.SetInt("BeatGame",1);
+            SoundManager.instance.musicSource.Stop();
+            Application.LoadLevel("_Scenes/MenuEnding");
+            return;
+        }
+        else { 
+            Application.LoadLevel("_Scenes/Menu");
+        }
     }
     public void RestartLevel()
     {
+        GameManager.instance.levelMusicContinue = true;
         noMoreMenuOnNextLoad = true;
         if (currentLevel is TutorialLevel1)
         {
@@ -586,6 +847,21 @@ public class GameManager : MonoBehaviour {
         {
             //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
             Application.LoadLevel("_Scenes/Tutorial9");
+        }
+        else if (currentLevel is TutorialLevel10)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial10");
+        }
+        else if (currentLevel is TutorialLevel11)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial11");
+        }
+        else if (currentLevel is TutorialLevel12)
+        {
+            //Both this line and next do same thing: Application.LoadLevel("Tutorial2");
+            Application.LoadLevel("_Scenes/Tutorial12");
         }
     }
 
@@ -680,6 +956,35 @@ public class GameManager : MonoBehaviour {
             case 9:
                 Application.LoadLevel("_Scenes/Tutorial9");
                 break;
+            case 10:
+                Application.LoadLevel("_Scenes/Tutorial10");
+                break;
+            case 11:
+                Application.LoadLevel("_Scenes/Tutorial11");
+                break;
+            case 12:
+                Application.LoadLevel("_Scenes/Tutorial12");
+                break;
+            case 13:
+                Application.LoadLevel("_Scenes/Story");
+                noMoreMenuOnNextLoad = false;
+                noMoreLevelOnNextLoad = true;
+                break;
+            case 14:
+                Application.LoadLevel("_Scenes/Credits");
+                noMoreMenuOnNextLoad = false;
+                noMoreLevelOnNextLoad = true;
+                break;
+            case 15:
+                Application.LoadLevel("_Scenes/Story");
+                noMoreMenuOnNextLoad = false;
+                noMoreLevelOnNextLoad = true;
+                break;
+            case 16:
+                Application.LoadLevel("_Scenes/ToBeContinued");
+                noMoreMenuOnNextLoad = false;
+                noMoreLevelOnNextLoad = true;
+                break;
         }
     }
     public void RefreshMessage() {
@@ -705,7 +1010,7 @@ public class GameManager : MonoBehaviour {
         }
         else if (currentLevel is TutorialLevel6)
         {
-            infoUI.SetMessage("Winoa can\n heal.");
+            infoUI.SetMessage("Winoa can\n heal.\nPress z with\n 75 special\n and then run\ninto another\na unit to\nheal him.");
         }
         else if (currentLevel is TutorialLevel7)
         {
@@ -717,15 +1022,31 @@ public class GameManager : MonoBehaviour {
         }
         else if (currentLevel is TutorialLevel9)
         {
-            infoUI.SetMessage("Insert\nmessage\nhere");
+            infoUI.SetMessage("You have\n"+ ((TutorialLevel9)currentLevel).chickens+ "\nchicken flowers");
         }
-
+        else if (currentLevel is TutorialLevel10)
+        {
+            infoUI.SetMessage("You have\n" + ((TutorialLevel10)currentLevel).currentElectric + "\nbattery boxes");
+        }
+        else if (currentLevel is TutorialLevel11)
+        {
+            infoUI.SetMessage("Be brave" + "\nlike Bruce");
+        }
+        else if (currentLevel is TutorialLevel12)
+        {
+            infoUI.SetMessage("Prepare" + "\nyour anus.");
+        }
     }
 
 
     public void goBackToTitleScreen()
     {
         noMoreLevelOnNextLoad = true;
+        hintsOn = true;
+        difficultyLevel = 1;
+        levelMusicContinue = false;
+        levelMusicPaused = false;
+        storyMusicPaused = false;
         GameManager.instance.whichMenu = "title";
         if (SoundManager.instance) { 
         Destroy(SoundManager.instance.gameObject);

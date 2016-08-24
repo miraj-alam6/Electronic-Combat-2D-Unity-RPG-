@@ -15,6 +15,8 @@ public class MenuManager : MonoBehaviour {
     public ChoiceScreen titleScreen;
     public ChoiceScreen levelDoneScreen;
     public ChoiceScreen inGameMenu;
+    public ChoiceScreen titleScreenEndGameScreen;
+    public ChoiceScreen levelSelectionScreen;
     public GameObject difficultyScreenObject;
     public GameObject confirmScreenObject;
     public GameObject titleScreenObject;
@@ -33,36 +35,56 @@ public class MenuManager : MonoBehaviour {
         if (GameManager.instance.whichMenu.Equals("level_done")) {
             activateLevelDoneScreen();
         }
+        if (GameManager.instance.whichMenu.Equals("title")) {
+            if (PlayerPrefs.HasKey("BeatGame"))
+            {
+                if (PlayerPrefs.GetInt("BeatGame") == 1)
+                {
+                    activateEndTitleScreen();
+                }
+                else {
+                    activateTitleScreen();
+                }
+            }
+            else {
+
+                activateTitleScreen();
+            }
+        }
     }
     public void loadFile() {
 
     }
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            activateConfirmScreen();
-        }
 
+        /*
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+         //   activateConfirmScreen();
+        }
+        
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            activateDiffcultySelectionScreen();
+           // activateDiffcultySelectionScreen();
         }
+        
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            activateTitleScreen();
+           // activateTitleScreen();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            activateLevelDoneScreen();
+           // activateLevelDoneScreen();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            activateInGameMenu();
+           // activateInGameMenu();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            deactivateAllScreens();
+           // deactivateAllScreens();
         }
+        */
         // if (inputCoolDownCurrent >= inputCoolDownGoal) {
         //     inputCoolDown = false;
         //     inputCoolDownCurrent = 0;
@@ -71,7 +93,7 @@ public class MenuManager : MonoBehaviour {
         //      inputCoolDownCurrent++;
         //      return;
         //  }
-        else if (Input.GetButtonDown("Submit"))
+        if (Input.GetButtonDown("Submit"))
         {
             submit();
         }
@@ -128,6 +150,26 @@ public class MenuManager : MonoBehaviour {
         }
 
     }
+    public void activateEndTitleScreen()
+    {
+        deactivateAllScreens();
+        if (titleScreenEndGameScreen)
+        {
+            titleScreenEndGameScreen.gameObject.SetActive(true);
+            currentChoiceScreen = titleScreenEndGameScreen;
+        }
+
+    }
+    public void activateLevelSelectionScreen()
+    {
+        deactivateAllScreens();
+        if (levelSelectionScreen)
+        {
+            levelSelectionScreen.gameObject.SetActive(true);
+            currentChoiceScreen = levelSelectionScreen;
+        }
+
+    }
     public void activateLevelDoneScreen()
     {
         deactivateAllScreens();
@@ -157,6 +199,14 @@ public class MenuManager : MonoBehaviour {
         if (confirmScreen) {
             confirmScreen.gameObject.SetActive(false);
         }
+        if (titleScreenEndGameScreen)
+        {
+            titleScreenEndGameScreen.gameObject.SetActive(false);
+        }
+        if (levelSelectionScreen)
+        {
+            levelSelectionScreen.gameObject.SetActive(false);
+        }
 
     }
     void mainstick(int xDir, int yDir) {
@@ -173,6 +223,14 @@ public class MenuManager : MonoBehaviour {
         if (yDir == -1)
         {
             currentChoiceScreen.moveDown();
+        }
+        if (xDir == 1)
+        {
+            currentChoiceScreen.moveRight();
+        }
+        if (xDir == -1)
+        {
+            currentChoiceScreen.moveLeft();
         }
     }
     void popUpMessage()
@@ -262,7 +320,37 @@ public class MenuManager : MonoBehaviour {
             primaryChoice = choice;
             activateConfirmScreen();
         }
+        else if (currentChoiceScreen == titleScreenEndGameScreen)
+        {
+            if (choice == -1)
+            {
+                return;
+            }
+            else if (choice == 1)
+            {
+                if (
+                    !(PlayerPrefs.HasKey("LevelNumber") && PlayerPrefs.HasKey("HintStatus"))
+                    )
+                {
+                    Debug.Log("There is no save file");
+                    return;
+                }
+            }
+            primaryScreen = titleScreenEndGameScreen;
+            primaryChoice = choice;
+            activateConfirmScreen();
+        }
 
+        else if (currentChoiceScreen == levelSelectionScreen)
+        {
+            if (choice == -1)
+            {
+                return;
+            }
+            primaryScreen = levelSelectionScreen;
+            primaryChoice = choice;
+            activateConfirmScreen();
+        }
         else if (currentChoiceScreen == levelDoneScreen)
         {
             if (choice == -1)
@@ -327,12 +415,15 @@ public class MenuManager : MonoBehaviour {
         }
         else if (primaryScreen == titleScreen)
         {
+            //New Game here
             if (primaryChoice == 0)
             {
               //  Debug.Log("A new journey begins");
-                GameManager.instance.noMoreMenuOnNextLoad = true;
+                GameManager.instance.noMoreLevelOnNextLoad = true;
                 GameManager.instance.levelNumber = 1;
-                LoadNextLevel();
+                GameManager.instance.hintsOn = true;
+                GameManager.instance.difficultyLevel = 1;
+                Application.LoadLevel("_Scenes/Story");
             }
             //Load game here
             else if (primaryChoice == 1)
@@ -340,19 +431,50 @@ public class MenuManager : MonoBehaviour {
                // Debug.Log("You want to continue fam? ");
                 CrappyLoadFile();
             }
+            //Quit Game here
             else if (primaryChoice == 2)
             {
                // Debug.Log("You will now quit, doesn't work in editor but works in actual game");
                 Application.Quit();
             }
         }
+
+        else if (primaryScreen == titleScreenEndGameScreen)
+        {
+            //New Game here
+            if (primaryChoice == 0)
+            {
+                //  Debug.Log("A new journey begins");
+                GameManager.instance.noMoreLevelOnNextLoad = true;
+                GameManager.instance.levelNumber = 1;
+                GameManager.instance.hintsOn = true;
+                GameManager.instance.difficultyLevel = 1;
+                Application.LoadLevel("_Scenes/Story");
+            }
+            //Load game here
+            else if (primaryChoice == 1)
+            {
+                // Debug.Log("You want to continue fam? ");
+                CrappyLoadFile();
+            }
+            //Quit Game here
+            else if (primaryChoice == 2)
+            {
+                // Debug.Log("You will now quit, doesn't work in editor but works in actual game");
+                Application.Quit();
+            }
+            else if (primaryChoice == 3)
+            {
+                // Debug.Log("You will now quit, doesn't work in editor but works in actual game");
+                Debug.Log("Activating level selection");
+                activateLevelSelectionScreen();
+            }
+        }
         else if (primaryScreen == levelDoneScreen)
         {
             if (primaryChoice == 0)
             {
-                Debug.Log("Time to start fighting again.");
-                GameManager.instance.noMoreMenuOnNextLoad = true;
-                LoadNextLevel();
+                StartLevelLogic();
             }
             else if (primaryChoice == 1)
             {
@@ -373,11 +495,83 @@ public class MenuManager : MonoBehaviour {
             {
                 Debug.Log("You shoudn't be able to reach here");
             }
+            //Quit from level done screen to title screen
             else if (primaryChoice == 4)
             {
                 Debug.Log("You will now quit, doesn't work in editor but works in actual game");
                 GameManager.instance.goBackToTitleScreen();
             }
+        }
+
+        else if (primaryScreen == levelSelectionScreen)
+        {
+            int i = 1;
+            if (primaryChoice == 0)
+            {
+                i = 1;
+            }
+            else if (primaryChoice == 1)
+            {
+                i = 2;
+
+            }
+            else if (primaryChoice == 2)
+            {
+                i = 3;
+
+            }
+            
+            else if (primaryChoice == 3)
+            {
+                i = 4;
+
+            }
+            else if (primaryChoice == 4)
+            {
+                i = 5;
+
+            }
+            else if (primaryChoice == 5)
+            {
+                i = 6;
+
+            }
+            else if (primaryChoice == 6)
+            {
+                i = 7;
+
+            }
+            else if (primaryChoice == 7)
+            {
+                i = 8;
+
+            }
+            else if (primaryChoice == 8)
+            {
+                i = 9;
+
+            }
+            else if (primaryChoice == 9)
+            {
+                i = 10;
+
+            }
+            else if (primaryChoice == 10)
+            {
+                i = 11;
+
+            }
+            else if (primaryChoice == 11)
+            {
+                i = 12;
+
+            }
+            GameManager.instance.noMoreMenuOnNextLoad = true;
+            GameManager.instance.levelMusicContinue = false;
+            GameManager.instance.levelMusicPaused = false;
+            GameManager.instance.storyMusicPaused = false;
+            GameManager.instance.levelNumber = i;
+            StartLevelLogic();
         }
         //Invoke("deactivateConfirmScreen",0.1f);
     }
@@ -404,7 +598,13 @@ public class MenuManager : MonoBehaviour {
         GameManager.instance.difficultyLevel = fl.getDifficulty();
         GameManager.instance.noMoreLevelOnNextLoad = true;
         GameManager.instance.whichMenu = "level_done";
-        Application.LoadLevel("_Scenes/Menu");
+        if (GameManager.instance.levelNumber == 13)
+        {
+            Application.LoadLevel("_Scenes/MenuEnding");
+        }
+        else { 
+            Application.LoadLevel("_Scenes/Menu");
+        }
     }
     public void CrappySaveFile()
     {
@@ -435,5 +635,103 @@ public class MenuManager : MonoBehaviour {
     {
         FileLoader fl = new FileLoader();
         fl.saveFile();
+    }
+
+    //this will decide if we start a level from next level choice or if we load a story scene
+    public void StartLevelLogic() {
+        if (GameManager.instance.levelNumber == 1)
+        {
+            Debug.Log("Time to see a story scene");
+            GameManager.instance.noMoreLevelOnNextLoad = true;
+            Application.LoadLevel("_Scenes/Story");
+        }
+        if (GameManager.instance.levelNumber == 4)
+        {
+            Debug.Log("Time to see a story scene");
+            GameManager.instance.noMoreLevelOnNextLoad = true;
+            Application.LoadLevel("_Scenes/Story");
+        }
+        else if (GameManager.instance.levelNumber == 6)
+        {
+            Debug.Log("Time to see a story scene");
+            if (GameManager.instance.levelMusicContinue) {
+
+            }
+            if (GameManager.instance.levelMusicContinue) {
+                GameManager.instance.levelMusicPaused = true;
+                SoundManager.instance.musicSource.Pause();
+            }
+
+            GameManager.instance.noMoreLevelOnNextLoad = true;
+            Application.LoadLevel("_Scenes/Story");
+        }
+        else if (GameManager.instance.levelNumber == 7)
+        {
+            Debug.Log("Time to see a story scene");
+            if (GameManager.instance.levelMusicContinue)
+            {
+
+            }
+            if (GameManager.instance.levelMusicContinue)
+            {
+                GameManager.instance.levelMusicPaused = true;
+                SoundManager.instance.musicSource.Pause();
+            }
+
+            GameManager.instance.noMoreLevelOnNextLoad = true;
+            Application.LoadLevel("_Scenes/Story");
+        }
+        else if (GameManager.instance.levelNumber == 8)
+        {
+            Debug.Log("Time to see a story scene");
+            if (GameManager.instance.levelMusicContinue)
+            {
+
+            }
+            if (GameManager.instance.levelMusicContinue)
+            {
+                GameManager.instance.levelMusicPaused = true;
+                SoundManager.instance.musicSource.Pause();
+            }
+
+            GameManager.instance.noMoreLevelOnNextLoad = true;
+            Application.LoadLevel("_Scenes/Story");
+        }
+        else if (GameManager.instance.levelNumber == 9)
+        {
+            Debug.Log("Time to see a story scene");
+            if (GameManager.instance.levelMusicContinue)
+            {
+
+            }
+            SoundManager.instance.musicSource.Stop();
+            GameManager.instance.levelMusicContinue = false;
+            GameManager.instance.levelMusicPaused = false;
+
+
+            GameManager.instance.noMoreLevelOnNextLoad = true;
+            Application.LoadLevel("_Scenes/Story");
+        }
+        else if (GameManager.instance.levelNumber == 12)
+        {
+            Debug.Log("Time to see a story scene");
+            if (GameManager.instance.levelMusicContinue)
+            {
+
+            }
+            SoundManager.instance.musicSource.Stop();
+            GameManager.instance.levelMusicContinue = false;
+            GameManager.instance.levelMusicPaused = false;
+
+
+            GameManager.instance.noMoreLevelOnNextLoad = true;
+            Application.LoadLevel("_Scenes/Story");
+        }
+        else {
+            Debug.Log("Time to start fighting again.");
+            GameManager.instance.noMoreMenuOnNextLoad = true;
+            LoadNextLevel();
+        }
+        
     }
 }

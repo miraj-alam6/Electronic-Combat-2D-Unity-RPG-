@@ -49,7 +49,7 @@ public class Kali : Character {
         switch (currentSpecial) {
             case "halt":
                  Debug.Log("halt is reached");
-                if (specialValue >= 80)
+                if (specialValue >= 70)
                 {
                     SoundManager.instance.PlaySingle(2, startSpecialSound);
                     Debug.Log("halt worked");
@@ -63,8 +63,8 @@ public class Kali : Character {
                 }
                 //the following invocation works for both the case where it actually works, and
                 //when it doesn't
-                self.specialGauge.ReduceSpecialValue(80);
-                GameManager.instance.LeftUI.GetComponent<VitalsUI>().KaliReduceSpecialValue(80);
+                self.specialGauge.ReduceSpecialValue(70);
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().KaliReduceSpecialValue(70);
               
                 break;
                 

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 //choice at most that is toggled in a
 public class ChoiceScreen : MonoBehaviour {
 
-    public Text finishedLevel;
+    public Text LevelText;
     public string typeMenu;
     public Image[] allButtons;
     public int currentIndex = -1;
@@ -25,8 +25,13 @@ public class ChoiceScreen : MonoBehaviour {
         {
             setToggledChoice(1, false);
         }
-        if (finishedLevel) { 
-        finishedLevel.text = "Finished Level " + (GameManager.instance.levelNumber - 1);
+        if (LevelText) {
+            if (GameManager.instance.levelNumber == 13) {
+                LevelText.text = "Ending Scene";
+            }
+            else { 
+                LevelText.text = "Level " + (GameManager.instance.levelNumber);
+            }
         }
         updateChoiceScreen();
 
@@ -85,6 +90,38 @@ public class ChoiceScreen : MonoBehaviour {
         updateChoiceScreen();
     }
 
+    public void moveRight()
+    {
+        if (totalChoices < 12)
+        {
+            return;
+        }
+        if (currentIndex == -1)
+        {
+            startChoosing();
+            return;
+        }
+        currentIndex = (currentIndex + 4) % 12;
+        updateChoiceScreen();
+    }
+    public void moveLeft()
+    {
+        if (totalChoices < 12) {
+            return;
+        }
+        if (currentIndex == -1)
+        {
+            startChoosing();
+            return;
+        }
+        currentIndex = (currentIndex - 4);
+        if(currentIndex < 0)
+        {
+            currentIndex = 12 + currentIndex;
+
+        }
+        updateChoiceScreen();
+    }
     public void updateChoiceScreen() {
        
         for (int i = 0; i < totalChoices; i++) {

@@ -6,7 +6,7 @@ using Random = UnityEngine.Random; // we need to specify this because there is a
 
 public class BoardManager : MonoBehaviour {
     [Serializable]
-    public class Count{
+    public class Count {
         public int minimum;
         public int maximum;
 
@@ -20,8 +20,8 @@ public class BoardManager : MonoBehaviour {
     public int columns = 8;
     public int rows = 8;
     //can change these dimensions as we want to, but gonna begin with an 8 by 8 game board.
-    public Count wallCount = new Count(5,9); //min and max represent the range of the random amount
-    public Count foodCount = new Count(1,5);
+    public Count wallCount = new Count(5, 9); //min and max represent the range of the random amount
+    public Count foodCount = new Count(1, 5);
     public GameObject exit; //just need one exit, for the rest of game objects use an array.
     public GameObject[] floorTiles;
     public GameObject[] wallTiles;
@@ -29,7 +29,7 @@ public class BoardManager : MonoBehaviour {
     public GameObject[] enemyTiles;
     public GameObject[] outerWallTiles;
     //all of these are public variables so we will fill their values in the inspector.
-    
+
     private Transform boardHolder; //this is just a parent that will hold all the board objects
     //as children so that they don't fill up the inspector, because there will be A LOT of board objects
     //so it's better if they are in a wrapper so that inspector is more clean.
@@ -37,9 +37,9 @@ public class BoardManager : MonoBehaviour {
 
     void InitializeList() {
         gridPositions.Clear();
-        for (int x = 1; x < columns-1; x++) {
-            for (int y = 1; y < rows-1; y++) {
-                gridPositions.Add(new Vector3(x,y,0f)); //this is a 2d game so we don't need the third position
+        for (int x = 1; x < columns - 1; x++) {
+            for (int y = 1; y < rows - 1; y++) {
+                gridPositions.Add(new Vector3(x, y, 0f)); //this is a 2d game so we don't need the third position
             }
         }
         //we did -1 for columns and rows limit because we're gonna have a board of impassable outer wall
@@ -47,12 +47,17 @@ public class BoardManager : MonoBehaviour {
 
     void BoardSetup() {
         boardHolder = new GameObject("Board").transform;
-        if (GameManager.instance.currentLevel is TutorialLevel9)
+        if (GameManager.instance.currentLevel is TutorialLevel9 ||
+            GameManager.instance.currentLevel is TutorialLevel10 ||
+            GameManager.instance.currentLevel is TutorialLevel11)
         {
             Debug.Log("First level that is bigger than camera");
             gameCalculation.initializeGameCalculation(12, 12, 1);
         }
-        else { 
+        else if (GameManager.instance.currentLevel is TutorialLevel12) {
+            gameCalculation.initializeGameCalculation(15, 15, 1);
+        }
+        else {
             gameCalculation.initializeGameCalculation(columns, rows, 1);
         }
         //Comment all the following out since our board is already made in the editor
@@ -137,19 +142,10 @@ public class BoardManager : MonoBehaviour {
     //notice that our following function is  the single public function in our class, because it is
     //what will be called by the GameManager or something
     public void SetupScene(int level) {
-        if(level < 11)
-        {
-            TemporaryFunction();
-            return;
-        }
-        BoardSetup(); //commented this out since i make the levels using unity editor now
-        InitializeList(); //I don't think I need this anymore
-       // LayoutObjectAtRandom(wallTiles,wallCount.minimum, wallCount.maximum,"wall");
-       // LayoutObjectAtRandom(foodTiles, foodCount.minimum, foodCount.maximum,"food");
-        //we're gonna make a logarithmic difficulty progression using enemyCount
-        int enemyCount = (int)Mathf.Log(level, 2.0f); //means 1 enemie at level 1, 2 enemies at level 4, 3 enemies at level 8, and so on.
-        LayoutObjectAtRandom(enemyTiles, enemyCount,enemyCount,"enemy"); //min max are same because we already generated how many enemies, no randomness.
-        Instantiate(exit,new Vector3(columns -1, rows -1,0f),Quaternion.identity);//exit always in same position, which is why we use -1,-1.
+        
+        TemporaryFunction();
+        return;
+        
     }
 
     //All the level design thingy is in the actual scene. Keep the boardsetup,

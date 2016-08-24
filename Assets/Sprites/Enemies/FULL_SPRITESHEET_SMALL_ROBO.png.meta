@@ -44,22 +44,22 @@ TextureImporter:
     21300074: Hit_Right_2
     21300076: Hit_Left_1
     21300078: Hit_Left_2
-    21300080: Scavengers_SpriteSheet_40
-    21300082: Scavengers_SpriteSheet_41
-    21300084: Scavengers_SpriteSheet_42
-    21300086: Scavengers_SpriteSheet_43
-    21300088: Scavengers_SpriteSheet_44
-    21300090: Scavengers_SpriteSheet_45
-    21300092: Scavengers_SpriteSheet_46
-    21300094: Scavengers_SpriteSheet_47
-    21300096: Scavengers_SpriteSheet_48
-    21300098: Scavengers_SpriteSheet_49
-    21300100: Scavengers_SpriteSheet_50
-    21300102: Scavengers_SpriteSheet_51
-    21300104: Scavengers_SpriteSheet_52
-    21300106: Scavengers_SpriteSheet_53
-    21300108: Scavengers_SpriteSheet_54
-    21300110: Scavengers_SpriteSheet_55
+    21300080: Die_Down_1
+    21300082: Die_Down_2
+    21300084: Die_Down_3
+    21300086: Die_Down_4
+    21300088: Die_Right_1
+    21300090: Die_Right_2
+    21300092: Die_Right_3
+    21300094: Die_Right_4
+    21300096: Die_Up_1
+    21300098: Die_Up_2
+    21300100: Die_Up_3
+    21300102: Die_Up_4
+    21300104: Die_Left_1
+    21300106: Die_Left_2
+    21300108: Die_Left_3
+    21300110: Die_Left_4
     21300112: Scavengers_SpriteSheet_0
     21300114: Scavengers_SpriteSheet_1
     21300116: Scavengers_SpriteSheet_2
@@ -76,6 +76,22 @@ TextureImporter:
     21300138: Hit_Right_2
     21300140: Hit_Left_1
     21300142: Hit_Left_2
+    21300144: Scavengers_SpriteSheet_40
+    21300146: Scavengers_SpriteSheet_41
+    21300148: Scavengers_SpriteSheet_42
+    21300150: Scavengers_SpriteSheet_43
+    21300152: Scavengers_SpriteSheet_44
+    21300154: Scavengers_SpriteSheet_45
+    21300156: Scavengers_SpriteSheet_46
+    21300158: Scavengers_SpriteSheet_47
+    21300160: Scavengers_SpriteSheet_48
+    21300162: Scavengers_SpriteSheet_49
+    21300164: Scavengers_SpriteSheet_50
+    21300166: Scavengers_SpriteSheet_51
+    21300168: Scavengers_SpriteSheet_52
+    21300170: Scavengers_SpriteSheet_53
+    21300172: Scavengers_SpriteSheet_54
+    21300174: Scavengers_SpriteSheet_55
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -840,7 +856,7 @@ TextureImporter:
         - {x: 9, y: -16}
         - {x: 9, y: 7}
         - {x: 4, y: 12}
-    - name: Scavengers_SpriteSheet_40
+    - name: Die_Down_1
       rect:
         serializedVersion: 2
         x: 0
@@ -851,7 +867,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_41
+    - name: Die_Down_2
       rect:
         serializedVersion: 2
         x: 32
@@ -862,7 +878,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_42
+    - name: Die_Down_3
       rect:
         serializedVersion: 2
         x: 64
@@ -873,7 +889,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_43
+    - name: Die_Down_4
       rect:
         serializedVersion: 2
         x: 96
@@ -884,7 +900,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_44
+    - name: Die_Right_1
       rect:
         serializedVersion: 2
         x: 128
@@ -895,7 +911,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_45
+    - name: Die_Right_2
       rect:
         serializedVersion: 2
         x: 160
@@ -906,7 +922,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_46
+    - name: Die_Right_3
       rect:
         serializedVersion: 2
         x: 192
@@ -917,7 +933,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_47
+    - name: Die_Right_4
       rect:
         serializedVersion: 2
         x: 224
@@ -928,7 +944,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_48
+    - name: Die_Up_1
       rect:
         serializedVersion: 2
         x: 0
@@ -939,7 +955,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_49
+    - name: Die_Up_2
       rect:
         serializedVersion: 2
         x: 32
@@ -950,7 +966,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_50
+    - name: Die_Up_3
       rect:
         serializedVersion: 2
         x: 64
@@ -961,7 +977,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_51
+    - name: Die_Up_4
       rect:
         serializedVersion: 2
         x: 96
@@ -972,7 +988,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_52
+    - name: Die_Left_1
       rect:
         serializedVersion: 2
         x: 128
@@ -983,7 +999,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_53
+    - name: Die_Left_2
       rect:
         serializedVersion: 2
         x: 160
@@ -994,7 +1010,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_54
+    - name: Die_Left_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1005,7 +1021,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Scavengers_SpriteSheet_55
+    - name: Die_Left_4
       rect:
         serializedVersion: 2
         x: 224

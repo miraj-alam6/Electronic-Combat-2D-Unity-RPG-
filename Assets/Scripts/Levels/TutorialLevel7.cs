@@ -9,7 +9,7 @@ public class TutorialLevel7 : Level
     {
 
     }
-    public override void updateLevel(string message)
+    public override bool updateLevel(string message)
     {
         base.updateLevel(message);
 
@@ -26,6 +26,7 @@ public class TutorialLevel7 : Level
             //Invoke("Restart", 1); //this will call the function 1 second after colliding
             GameManager.instance.DoneWithLevel();
         }
+        return true;
     }
 
     public override void turnBehavior()
@@ -38,7 +39,7 @@ public class TutorialLevel7 : Level
             }
             if (turnCount == 4)
             {
-                GameManager.instance.showMessage("Hugo does not have guns but he can analyze units and objects (same controls as guns). You need both special and ATG to analyze. There is no cost to analyzing players and stuff you already analyzed before. Analyzing an enemy for first time costs more than analyzing objects.");
+                GameManager.instance.showMessage("Hugo does not have guns but he can analyze units, walls, etc(same controls as guns). You need both special and ATG to analyze. There is no cost to analyzing players and stuff you already analyzed before. Analyzing an enemy for first time costs more than analyzing objects.");
             }
             if (turnCount == 7)
             {

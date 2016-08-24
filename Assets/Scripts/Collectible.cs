@@ -15,7 +15,14 @@ public class Collectible : MonoBehaviour {
                 Debug.Log("You got " + quantity + "battery box.");
                 message = "You got " + quantity + "\nbattery box";
                 GameManager.instance.gameData.addBatteryBoxCount(quantity);
-                Debug.Log("You have a total of "+ GameManager.instance.gameData.batteryBoxCount + " battery box.");
+                if (GameManager.instance.currentLevel is TutorialLevel9)
+                {
+                    message += ("You have a total of " +
+                        (((TutorialLevel10)GameManager.instance.currentLevel).currentElectric+ quantity) +
+                        " battery boxes.");
+                }
+                //Debug.Log("You have a total of "+ GameManager.instance.gameData.batteryBoxCount + " battery box.");
+                GameManager.instance.currentLevel.updateLevel("got_battery");
                 break;
             case "Chicken":
                 message = "You got " + quantity + " chicken flower.";
@@ -24,7 +31,7 @@ public class Collectible : MonoBehaviour {
                         (((TutorialLevel9)GameManager.instance.currentLevel).chickens + quantity) + 
                         " chicken flowers.");
                 }
-                Debug.Log("You got a chicken flower.");
+                //Debug.Log("You got a chicken flower.");
                 GameManager.instance.currentLevel.updateLevel("got_chicken");
                 break;
             case "Burger":

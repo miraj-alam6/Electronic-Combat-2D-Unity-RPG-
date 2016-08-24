@@ -8,7 +8,7 @@ public class TutorialLevel1 : Level {
     {
        
     }
-    public override void updateLevel(string message) {
+    public override bool updateLevel(string message) {
         base.updateLevel(message);
 
         if (message.Equals("broke_pot")) {
@@ -23,6 +23,7 @@ public class TutorialLevel1 : Level {
             //Invoke("Restart", 1); //this will call the function 1 second after colliding
             GameManager.instance.DoneWithLevel();
         }
+        return true;
     }
 
     public override void turnBehavior()
@@ -41,7 +42,8 @@ public class TutorialLevel1 : Level {
             {
                 GameManager.instance.showMessage("As you have just seen, the ATG fills up, and once it is full" +
                     " the unit whose bar just filled up will get a turn. Every move will lower the ATG" +
-                    " and once the ATG becomes 0, the turn will end, and ATG will start filling up again.");
+                    " and once the ATG becomes 0, your ATG bar on the UI will turn white indicating you"+
+                    "have to end turn with space. ATG then starts filling up again.");
             }
 
             if (turnCount == 20)

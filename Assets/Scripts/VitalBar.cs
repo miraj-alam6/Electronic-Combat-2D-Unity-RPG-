@@ -5,10 +5,21 @@ using UnityEngine.UI;
 public class VitalBar : MonoBehaviour {
     public string type; //Will either be HP or ATB
     RectTransform transform;
+    public bool isUI;
+    public Text HealthText;
+    public Text ATBText;
+    public RawImage background;
    // int HP = 4000;
     void Start () {
         transform = GetComponent<RectTransform>();
-        UpdateVitalBar(1,1);
+        if (type.Equals("ATB"))
+        {
+            UpdateVitalBar(1, 0);
+        }
+        else
+        { 
+            UpdateVitalBar(1,1);
+        }
     }
 	
 	// Update is called once per frame
@@ -28,6 +39,14 @@ public class VitalBar : MonoBehaviour {
         if (transform) { 
         transform.localScale = new Vector3((float)currVal/maxVal,1.0f,1.0f);
         }
+        if (background) {
+            if (type.Equals("ATB")) {
+                background.color = Color.black;
+                if (currVal == 0) { 
+                    background.color = Color.white;
+                }
+            }
+        }
         //Debug.Log(transform.rect.width);
     }
     //Call this whenever you change health
@@ -36,6 +55,7 @@ public class VitalBar : MonoBehaviour {
         if (transform) { 
             transform.gameObject.GetComponent<RawImage>().color = Color.blue;
         }
+        
     }
     //Call this whenever you change health
     public void BecomeGreen()

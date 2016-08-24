@@ -12,6 +12,8 @@ public class Pot : MonoBehaviour {
     private Animator animator;
     private Collider2D collider;
     public GameObject collectible;
+    public int weight = 10;
+    public bool analyzedAlready = false;
     // Use this for initialization
     void Start () {
         animator = GetComponent<Animator>();

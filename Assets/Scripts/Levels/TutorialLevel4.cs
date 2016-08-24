@@ -8,7 +8,7 @@ public class TutorialLevel4 : Level {
     {
 
     }
-    public override void updateLevel(string message)
+    public override bool updateLevel(string message)
     {
         base.updateLevel(message);
 
@@ -25,6 +25,7 @@ public class TutorialLevel4 : Level {
             //Invoke("Restart", 1); //this will call the function 1 second after colliding
             GameManager.instance.DoneWithLevel();
         }
+        return false;
     }
     public override void turnBehavior() { 
        if (hintsOn)
@@ -39,7 +40,7 @@ public class TutorialLevel4 : Level {
                 GameManager.instance.showMessage("NOTE ABOUT HINTS: If you want to turn off hints and tutorial messages, press escape to open the menu. However, keep messages on if you don't know controls");
             }
             if (turnCount == 3) {
-                GameManager.instance.showMessage("If this is your first time playing, tutorial messages will teach you how to play, but if you get tired of reading the same messages because you keep dying and restarting the same stage, you can turn off hints, and then turn it back on, on your first turn in a new stage.");
+                GameManager.instance.showMessage("If  you get tired of reading the same messages because you keep dying and restarting the same stage, you can turn off hints, and then turn it back on, in the end level screen before the next level begins.");
             }
             if (turnCount == 4)
             {

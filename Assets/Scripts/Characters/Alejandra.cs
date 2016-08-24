@@ -83,9 +83,9 @@ public class Alejandra : Character
                 }
 
                 
-                if (self.ATB <= 0 && self.specialGauge.ReduceSpecialValue(90))
+                if (self.ATB <= 0 && self.specialGauge.ReduceSpecialValue(80))
                 {
-                    GameManager.instance.LeftUI.GetComponent<VitalsUI>().alejandraReduceSpecialValue(90);
+                    GameManager.instance.LeftUI.GetComponent<VitalsUI>().alejandraReduceSpecialValue(80);
                     //
                     SoundManager.instance.PlaySingle(2, startSpecialSound);
                     self.turnBlue();

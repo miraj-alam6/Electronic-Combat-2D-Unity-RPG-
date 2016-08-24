@@ -61,12 +61,14 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
     public int HardMinSpeed;
     public int HardMaxSpeed;
     public int HardATGCost;
+    public bool willSpawnInLastLevel;
     //flashMaterial is set in inspector, it is the font material
     public Material flashMaterial;
 
     protected virtual void Start () { //protected virtual can be overridden by inherting classes
         //set up all the stats for enemies based on what difficulty the game is
-        if (!isPlayer) {
+
+        if (!isPlayer && !willSpawnInLastLevel) {
             //Easy difficulty
             if (GameManager.instance.difficultyLevel <= 0)
             {
@@ -102,7 +104,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
 
         }
 
-
+        setDirection(direction);
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
         originalMaterial = spriteRenderer.material;
@@ -154,6 +156,15 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
     public void turnCyan()
     {
         spriteRenderer.color = Color.cyan;
+    }
+    public void flashOrange(float time)
+    {
+        if (GameManager.instance.noMoreLevelOnNextLoad || GameManager.instance.inMenuScreen)
+        {
+            return;
+        }
+        spriteRenderer.color = Color.red;
+        Invoke("becomeNormal", time);
     }
     public void turnGreen() {
         spriteRenderer.color = Color.green;
@@ -301,7 +312,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
 
         if (weInTutorialLevel6)
         {
-            if (name.Equals("Kali") && specialGauge.GetSpecialValue() >= 80)
+            if (name.Equals("Kali") && specialGauge.GetSpecialValue() >= 70)
             {
                 ((TutorialLevel6)GameManager.instance.currentLevel).kaliHasEnough = true;
                 GameManager.instance.currentLevel.turnBehavior();
@@ -448,6 +459,11 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
                     gainHP(4);
                 }
             }
+            if (name.Equals("Kali") && GameManager.instance.currentLevel is TutorialLevel12) {
+                Debug.Log("Why do we hurt");
+                GameManager.instance.finalBattleStuff.gameObject.SetActive(true);
+                GameManager.instance.currentLevel.updateLevel("one_turn");
+            }
             GameManager.instance.RefreshMessage();
             specialGauge.AddSpecialValue(specialGainRate);
             updateVitalsUISpecialAdd(1.0f);
@@ -506,6 +522,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
 
     public void setDirection(int direction)
     {
+        //Debug.Log(name + direction);
         this.direction = direction;
         if (direction == 1)
         {
@@ -523,6 +540,7 @@ public abstract class Unit : MonoBehaviour { //abstract because two both player 
         {
             animator.SetTrigger("FaceLeft");
         }
+       
     }
     //now the abstract function that was invoked in earlier code, 
     //something that isn't implemented here in the parent class

@@ -172,6 +172,18 @@ public class Hugo : Character
                     shooter.LoseATB(5);
                 }
             }
+            else if (category.Equals("pot"))
+            {
+                SoundManager.instance.PlaySingle(2, getIntelSound);
+                retVal = shooter.specialGauge.ReduceSpecialValue(3);
+                GameManager.instance.LeftUI.GetComponent<VitalsUI>().hugoReduceSpecialValue(3);
+                if (retVal)
+                {
+
+                    gridSelector.GetComponent<GridSelector>().setAnalyzed();
+                    shooter.LoseATB(2);
+                }
+            }
 
             if (retVal) {
                 SoundManager.instance.PlaySingle(2, getIntelSound);

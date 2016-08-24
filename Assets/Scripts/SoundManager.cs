@@ -8,6 +8,7 @@ public class SoundManager : MonoBehaviour {
     public AudioSource efxSource3;
     public AudioSource efxSource4;
     public AudioSource musicSource;
+    public AudioSource storyMusicSource;
     public static SoundManager instance = null;
 
     public float lowPitchRange = .95f;

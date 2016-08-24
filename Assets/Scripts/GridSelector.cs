@@ -129,6 +129,13 @@ public class GridSelector : MonoBehaviour {
         else if (other.tag == "Pot")
         {
             Debug.Log("Pot with HP: " + other.gameObject.GetComponent<Pot>().hp);
+            Pot pot = other.GetComponent<Pot>();
+            analyzedAlready = pot.analyzedAlready;
+            selectedObject = pot.gameObject;
+            message = "Pot Weight: " + pot.weight;
+            message += "\nPot HP: " + pot.hp;
+            shortmessage = "pot";
+            Debug.Log("Pot with HP: " + other.gameObject.GetComponent<Pot>().hp);
         }
 
         else if (other.tag == "Enemy")
@@ -138,7 +145,8 @@ public class GridSelector : MonoBehaviour {
             analyzedAlready = enemy.analyzedAlready;
             shortmessage = "enemy";
             Debug.Log("Enemy with HP: " + other.gameObject.GetComponent<Enemy>().HP);
-            message = "" + enemy.name + " HP:" + enemy.HP + "\n"
+            message = "" + enemy.name 
+            + "\nHP:" + enemy.HP + "\n"
             + "ATG Rate: " + enemy.minSpeed + "-" + enemy.maxSpeed + "\n"
             + "ATG Cost:" + enemy.ATBCost + "\n"
             + "ATK: " + enemy.attack + " DEF:" + enemy.defense;
@@ -210,6 +218,10 @@ public class GridSelector : MonoBehaviour {
         else if (shortmessage.Equals("wall"))
         {
             selectedObject.GetComponent<Wall>().analyzedAlready = true;
+        }
+        else if (shortmessage.Equals("pot"))
+        {
+            selectedObject.GetComponent<Pot>().analyzedAlready = true;
         }
         analyzedAlready = true;
     }

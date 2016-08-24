@@ -10,7 +10,7 @@ TextureImporter:
     21300006: Pot_Break_3
     21300008: Battery_Pack
     21300010: Chicken_Flower
-    21300012: Scavengers_SpriteSheet_6
+    21300012: Exit
     21300014: Scavengers_SpriteSheet_7
     21300016: Scavengers_SpriteSheet_8
     21300018: Scavengers_SpriteSheet_9
@@ -251,7 +251,7 @@ TextureImporter:
         - {x: 12, y: -16}
         - {x: 12, y: 14}
         - {x: 10, y: 16}
-    - name: Scavengers_SpriteSheet_6
+    - name: Exit
       rect:
         serializedVersion: 2
         x: 192

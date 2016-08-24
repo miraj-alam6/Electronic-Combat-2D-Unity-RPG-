@@ -11,7 +11,7 @@ public class PermaWall : MonoBehaviour {
         
         x = (int)GetComponent<Transform>().position.x;
         y = (int)GetComponent<Transform>().position.y;
-        GameManager.instance.gameCalculation.actualGrid[y, x].hasPermaWall = true;
+        GameManager.instance.gameCalculation.actualGrid[y, x].hasEnemy = true;
         GameManager.instance.gameCalculation.actualGrid[y, x].walkable = false;
     }
 	

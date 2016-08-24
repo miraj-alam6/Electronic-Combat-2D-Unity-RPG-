@@ -8,7 +8,7 @@ public class TutorialLevel8 : Level {
     {
 
     }
-    public override void updateLevel(string message)
+    public override bool updateLevel(string message)
     {
         base.updateLevel(message);
 
@@ -25,6 +25,7 @@ public class TutorialLevel8 : Level {
             //Invoke("Restart", 1); //this will call the function 1 second after colliding
             GameManager.instance.DoneWithLevel();
         }
+        return true;
     }
 
     public override void turnBehavior()
@@ -37,7 +38,7 @@ public class TutorialLevel8 : Level {
             }
             if (turnCount == 5)
             {
-                GameManager.instance.showMessage("Alejandra has a high(which is bad) ATG cost as well, but if you get 90 special AND once you run out of ATG for the turn, you can activate your special attack to get a second turn. Press z to activate it.");
+                GameManager.instance.showMessage("Alejandra has a high(which is bad) ATG cost as well, but if you get 80 special AND once you run out of ATG for the turn, you can activate your special attack to get a second turn. Press z to activate it.");
             }
             if (deathCount > 8 && turnCount == 2)
             {

@@ -249,7 +249,7 @@ public class InGameMenu : MonoBehaviour
                 {
                     ((Player)GameManager.instance.currentUnit).popUpMenuBeingShown = false;
                 }
-                GameManager.instance.LoadLevelByNumber(GameManager.instance.levelNumber);
+                GameManager.instance.currentLevel.updateLevel("restart");
                 gameObject.SetActive(false);
                 // GameManager.instance.toggleHints();
                 //gameObject.SetActive(false);
@@ -267,7 +267,8 @@ public class InGameMenu : MonoBehaviour
                         ((Player)GameManager.instance.currentUnit).popUpMenuBeingShown = false;
                     }
                     gameObject.SetActive(false);
-                    GameManager.instance.showMessage("You cannot quit the first level punk.");
+                    GameManager.instance.showMessage("Normally this would quit to a different screen but because this is the first level, you will instead quit to title screen");
+                    GameManager.instance.gonnaQuitToTitle = true;
                 }
                 else { 
                     Debug.Log("Confirmed you want to quit level");
@@ -276,6 +277,7 @@ public class InGameMenu : MonoBehaviour
                     inGameMenu.currentIndex = -1;
                     inGameMenu.updateChoiceScreen();
                     GameManager.instance.popUpMenuBeingShown = false;
+                    GameManager.instance.whichMenu = "level_done";
                     if (GameManager.instance.currentUnit is Player)
                     {
                         ((Player)GameManager.instance.currentUnit).popUpMenuBeingShown = false;

@@ -9,7 +9,7 @@ public class TutorialLevel5 : Level
 
     }
 
-    public override void updateLevel(string message)
+    public override bool updateLevel(string message)
     {
         base.updateLevel(message);
 
@@ -26,6 +26,7 @@ public class TutorialLevel5 : Level
             //Invoke("Restart", 1); //this will call the function 1 second after colliding
             GameManager.instance.DoneWithLevel();
         }
+        return true;
     }
 
     public override void turnBehavior()

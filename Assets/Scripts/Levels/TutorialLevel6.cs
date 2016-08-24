@@ -6,13 +6,16 @@ public class TutorialLevel6 : Level {
     int deadEnemies = 0;
     [HideInInspector]public bool winoaHasEnough = false;
     [HideInInspector]public bool kaliHasEnough = false;
+    public bool showedFirst = false;
+    public bool showedSecond = false;
+    public bool showedThird = false;
     bool winoaNotTaught = true;
     bool kaliNotTaught = true;
     public TutorialLevel6(int deaths) : base((deaths))
     {
 
     }
-    public override void updateLevel(string message)
+    public override bool updateLevel(string message)
     {
         base.updateLevel(message);
 
@@ -29,6 +32,7 @@ public class TutorialLevel6 : Level {
             //Invoke("Restart", 1); //this will call the function 1 second after colliding
             GameManager.instance.DoneWithLevel();
         }
+        return true;
     }
 
     public override void turnBehavior()
@@ -36,14 +40,25 @@ public class TutorialLevel6 : Level {
         if (hintsOn)
         {
 
+            if (turnCount == 1)
+            {
+                if(!showedFirst)
+                GameManager.instance.showMessage("Winoa is weaker than Kali in both melee and range, and her ATG depletes faster, but her ATG fills up very quickly, and she regenerates health every turn. Most units will try to hit Kali first, and Winoa only if they cannot hit Kali (Exception are the baby robos)");
+                showedFirst = true;
+            }
             if (turnCount == 2)
             {
-                GameManager.instance.showMessage("Doing, specials is an intricate process. First try to get Winoa's special upto 75, or Kali's special upto 80. Winoa's special recharges much faster. Killing enemies are always the best way to charge your special really quickly.");
+                if (!showedSecond)
+                    GameManager.instance.showMessage("Doing, specials is an intricate process. First try to get Winoa's special upto 75, or Kali's special upto 70. Winoa's special recharges much faster. Killing enemies are always the best way to charge your special really quickly.");
+                showedSecond = true;
             }
             if (turnCount == 3)
             {
-                GameManager.instance.showMessage("Winoa is weaker than Kali and her ATG depletes faster, but her ATG also fills up very quickly. Kali's special, called Halt, can be used to destroy all accumulated ATG of a unit.");
+                if (!showedThird)
+                    GameManager.instance.showMessage("Winoa's special called Repair, can heal a unit other than herself. Kali's special, called Halt, can be used to destroy all accumulated ATG of a unit. However, Kali's special points may be better spent on bullets. ");
+                showedThird = true;
             }
+
             else if (turnCount > 2 && winoaHasEnough && winoaNotTaught)
             {
                 GameManager.instance.showMessage("Winoa now has enough special to do her Special Move: Repair. Press z to start it, and then move into a unit that you want to heal to heal him/her/it/unicorn.");

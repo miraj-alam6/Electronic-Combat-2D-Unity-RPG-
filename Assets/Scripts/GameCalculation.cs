@@ -113,7 +113,7 @@ public class GameCalculation : MonoBehaviour
                     else if (unIdealSituation)
                     {
                         pathGrid[i, j].fullOccupied = false;
-                        Debug.Log("Hello buddy");
+                       // Debug.Log("Hello buddy");
                     }
                     else {
                         pathGrid[i, j].fullOccupied = true;
