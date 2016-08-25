@@ -37,7 +37,7 @@ public class TutorialLevel4 : Level {
             }
             if (turnCount == 2)
             {
-                GameManager.instance.showMessage("NOTE ABOUT HINTS: If you want to turn off hints and tutorial messages, press escape to open the menu. However, keep messages on if you don't know controls");
+                GameManager.instance.showMessage("NOTE ABOUT HINTS: If you want to turn off hints and tutorial messages, press ESCAPE to open the menu. However, keep messages on if you don't know controls");
             }
             if (turnCount == 3) {
                 GameManager.instance.showMessage("If  you get tired of reading the same messages because you keep dying and restarting the same stage, you can turn off hints, and then turn it back on, in the end level screen before the next level begins.");

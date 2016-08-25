@@ -47,7 +47,7 @@ public class TutorialLevel7 : Level
             }
             if (turnCount == 10)
             {
-                GameManager.instance.showMessage("Hugo's special attack is called Turn Around. It will make a unit turn around, thus it can be helpful for doing back attacks. Use it just like you would Kali's special attack.");
+                GameManager.instance.showMessage("Hugo's special attack is called Turn Around, it costs 50. It will make a unit turn around, thus it can be helpful for doing back attacks. Use it just like you would Kali's special attack.");
             }
 
             if (turnCount == 13)

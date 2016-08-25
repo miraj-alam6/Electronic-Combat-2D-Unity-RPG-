@@ -38,8 +38,11 @@ public class TutorialLevel5 : Level
             {
                 GameManager.instance.showMessage("Different types of enemies have different stats. Even different units of the same enemy type can have slightly different stats.");
             }
-
-            if (deathCount > 5 && turnCount == 2)
+            if (turnCount == 2)
+            {
+                GameManager.instance.showMessage("IMPORTANT: Defeating an enemy with a ranged attack will not reward you with special, only way to get special from defeating an enemy is if you defeat the enemy with a melee attack. (Remember: defeating enemies is the best way to get special)");
+            }
+            if (deathCount > 5 && turnCount == 3)
             {
                 GameManager.instance.showMessage("HINT: Range attacks are important af sometimes.");
             }

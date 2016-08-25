@@ -15,9 +15,9 @@ public class Collectible : MonoBehaviour {
                 Debug.Log("You got " + quantity + "battery box.");
                 message = "You got " + quantity + "\nbattery box";
                 GameManager.instance.gameData.addBatteryBoxCount(quantity);
-                if (GameManager.instance.currentLevel is TutorialLevel9)
+                if (GameManager.instance.currentLevel is TutorialLevel10)
                 {
-                    message += ("You have a total of " +
+                    message += (". You have a total of " +
                         (((TutorialLevel10)GameManager.instance.currentLevel).currentElectric+ quantity) +
                         " battery boxes.");
                 }

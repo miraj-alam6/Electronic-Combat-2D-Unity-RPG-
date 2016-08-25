@@ -69,7 +69,7 @@ public class FinalBattle : MonoBehaviour {
 
         if (currentTurn == 59)
         {
-            GameManager.instance.showMessage("More enemies have come from the right");
+            GameManager.instance.showMessage("More enemies have come from the right. They are stronger now.");
             currentEnemyDifficulty++;
             SpawnRight();
         }

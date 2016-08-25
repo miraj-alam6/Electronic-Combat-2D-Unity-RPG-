@@ -69,7 +69,7 @@ public class TutorialLevel12 : Level
         {
             if (turnCount == 2)
             {
-                GameManager.instance.showMessage("Final battle, holy shit.");
+                GameManager.instance.showMessage("Final battle, holy shit. Beware: Winoa and Hugo are too weak to damage the final boss in most modes.");
             }
             if (turnCount == 3)
             {
@@ -81,9 +81,12 @@ public class TutorialLevel12 : Level
             }
             if (turnCount == 5)
             {
-                GameManager.instance.showMessage("One last thing to keep in mind is that Roxanne try to kill any unit that gets too close(within 5 spaces) to her that isn't Alejandra, but if no other unit except Alejandra is near her, than she will attack Alejandra.");
+                GameManager.instance.showMessage("Another thing to keep in mind is that Roxanne tries to kill any unit that gets too close(within 5 spaces) to her that isn't Alejandra, but if no other unit except Alejandra is near her, then she will attack Alejandra.");
             }
-
+            if (turnCount == 6)
+            {
+                GameManager.instance.showMessage("Last advice: late into the battle enemies will start spawning from the left and right, but you can stop them from spawning by blocking off the locations where they spawn. Furthermore, remember to always analyze their stats.");
+            }
         }
     }
 }

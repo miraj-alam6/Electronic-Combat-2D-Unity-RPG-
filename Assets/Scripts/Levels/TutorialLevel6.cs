@@ -9,6 +9,7 @@ public class TutorialLevel6 : Level {
     public bool showedFirst = false;
     public bool showedSecond = false;
     public bool showedThird = false;
+    public bool showedFourth = false;
     bool winoaNotTaught = true;
     bool kaliNotTaught = true;
     public TutorialLevel6(int deaths) : base((deaths))
@@ -52,13 +53,19 @@ public class TutorialLevel6 : Level {
                     GameManager.instance.showMessage("Doing, specials is an intricate process. First try to get Winoa's special upto 75, or Kali's special upto 70. Winoa's special recharges much faster. Killing enemies are always the best way to charge your special really quickly.");
                 showedSecond = true;
             }
-            if (turnCount == 3)
+            if (turnCount == 5)
             {
                 if (!showedThird)
                     GameManager.instance.showMessage("Winoa's special called Repair, can heal a unit other than herself. Kali's special, called Halt, can be used to destroy all accumulated ATG of a unit. However, Kali's special points may be better spent on bullets. ");
                 showedThird = true;
             }
 
+            if (turnCount == 6)
+            {
+                if (!showedFourth)
+                    GameManager.instance.showMessage("Winoa's bullet costs 13 to use, Kali's bullet cost 25 to use. Winoa's bullet, just like Kali's gives more damage than Melee, but Kali's melee and range are stronger than Winoa. ");
+                showedFourth = true;
+            }
             else if (turnCount > 2 && winoaHasEnough && winoaNotTaught)
             {
                 GameManager.instance.showMessage("Winoa now has enough special to do her Special Move: Repair. Press z to start it, and then move into a unit that you want to heal to heal him/her/it/unicorn.");

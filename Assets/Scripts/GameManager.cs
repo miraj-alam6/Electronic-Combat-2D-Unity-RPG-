@@ -385,7 +385,7 @@ public class GameManager : MonoBehaviour {
             levelMusicContinue = true;
             currentLevel = new TutorialLevel10(currentDeathsForLevel);
             Debug.Log(currentLevel);
-            infoUI.SetActualObjective("Collect " + ((TutorialLevel10)currentLevel).goalElectric + "\nBatter Boxes,\nand escape.");
+            infoUI.SetActualObjective("Collect " + ((TutorialLevel10)currentLevel).goalElectric + "\nBattery Boxes,\nand escape.");
         }
         else if (Application.loadedLevelName.Equals("_Scenes/Tutorial11") || Application.loadedLevelName.Equals("Tutorial11"))
         {
@@ -998,11 +998,11 @@ public class GameManager : MonoBehaviour {
         }
         else if (currentLevel is TutorialLevel3)
         {
-            infoUI.SetMessage("Obama is\na lizard");
+            //infoUI.SetMessage("Obama is\na lizard");
         }
         else if (currentLevel is TutorialLevel4)
         {
-            infoUI.SetMessage("Hilary is\na snake");
+            //infoUI.SetMessage("Hilary is\na snake");
         }
         else if (currentLevel is TutorialLevel5)
         {
